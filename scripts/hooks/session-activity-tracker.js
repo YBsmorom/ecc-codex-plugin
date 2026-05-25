@@ -3,7 +3,7 @@
  * Session Activity Tracker Hook
  *
  * PostToolUse hook that records sanitized per-tool activity to
- * ~/.claude/metrics/tool-usage.jsonl for ECC2 metric sync.
+ * the active ECC harness metrics directory for ECC2 metric sync.
  */
 
 'use strict';
@@ -13,7 +13,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const {
   appendFile,
-  getClaudeDir,
+  getEccDataDir,
   stripAnsi,
 } = require('../lib/utils');
 
@@ -561,13 +561,13 @@ function summarizeOutput(toolOutput) {
 }
 
 function buildActivityRow(input, env = process.env) {
-  const hookEvent = String(env.CLAUDE_HOOK_EVENT_NAME || '').trim();
+  const hookEvent = String(env.ECC_HOOK_EVENT_NAME || env.CODEX_HOOK_EVENT_NAME || env.CLAUDE_HOOK_EVENT_NAME || '').trim();
   if (hookEvent && hookEvent !== 'PostToolUse') {
     return null;
   }
 
   const toolName = String(input?.tool_name || '').trim();
-  const sessionId = String(env.ECC_SESSION_ID || env.CLAUDE_SESSION_ID || '').trim();
+  const sessionId = String(env.ECC_SESSION_ID || env.CODEX_SESSION_ID || env.CLAUDE_SESSION_ID || '').trim();
   if (!toolName || !sessionId) {
     return null;
   }
@@ -600,7 +600,7 @@ function run(rawInput) {
     const row = buildActivityRow(input);
     if (row) {
       appendFile(
-        path.join(getClaudeDir(), 'metrics', METRICS_FILE_NAME),
+        path.join(getEccDataDir(), 'metrics', METRICS_FILE_NAME),
         `${JSON.stringify(row)}\n`
       );
     }

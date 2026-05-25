@@ -49,7 +49,7 @@ async function main() {
     transcriptPath = input.transcript_path;
   } catch {
     // Fallback: try env var for backwards compatibility
-    transcriptPath = process.env.CLAUDE_TRANSCRIPT_PATH;
+    transcriptPath = process.env.CODEX_TRANSCRIPT_PATH || process.env.CLAUDE_TRANSCRIPT_PATH;
   }
 
   // Get script directory to find config

@@ -12,11 +12,14 @@ function getPluginRoot(options = {}) {
   if (options.pluginRoot && String(options.pluginRoot).trim()) {
     return String(options.pluginRoot).trim();
   }
-  if (process.env.CLAUDE_PLUGIN_ROOT && process.env.CLAUDE_PLUGIN_ROOT.trim()) {
-    return process.env.CLAUDE_PLUGIN_ROOT.trim();
-  }
   if (process.env.ECC_PLUGIN_ROOT && process.env.ECC_PLUGIN_ROOT.trim()) {
     return process.env.ECC_PLUGIN_ROOT.trim();
+  }
+  if (process.env.CODEX_PLUGIN_ROOT && process.env.CODEX_PLUGIN_ROOT.trim()) {
+    return process.env.CODEX_PLUGIN_ROOT.trim();
+  }
+  if (process.env.CLAUDE_PLUGIN_ROOT && process.env.CLAUDE_PLUGIN_ROOT.trim()) {
+    return process.env.CLAUDE_PLUGIN_ROOT.trim();
   }
   return path.resolve(__dirname, '..', '..');
 }
@@ -128,6 +131,7 @@ function run(raw, options = {}) {
     env: {
       ...process.env,
       CLAUDE_PLUGIN_ROOT: pluginRoot,
+      CODEX_PLUGIN_ROOT: pluginRoot,
       ECC_PLUGIN_ROOT: pluginRoot
     },
     cwd: process.cwd(),

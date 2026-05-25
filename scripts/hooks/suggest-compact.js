@@ -34,7 +34,7 @@ async function resolveSessionId() {
   } catch {
     /* fall through to env */
   }
-  return process.env.CLAUDE_SESSION_ID || 'default';
+  return process.env.ECC_SESSION_ID || process.env.CODEX_SESSION_ID || process.env.CLAUDE_SESSION_ID || 'default';
 }
 
 async function main() {

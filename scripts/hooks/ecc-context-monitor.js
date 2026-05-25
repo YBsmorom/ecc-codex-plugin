@@ -202,7 +202,11 @@ function run(rawInput) {
   try {
     const input = rawInput.trim() ? JSON.parse(rawInput) : {};
 
-    const sessionId = sanitizeSessionId(input.session_id) || sanitizeSessionId(process.env.ECC_SESSION_ID) || sanitizeSessionId(process.env.CLAUDE_SESSION_ID);
+    const sessionId =
+      sanitizeSessionId(input.session_id) ||
+      sanitizeSessionId(process.env.ECC_SESSION_ID) ||
+      sanitizeSessionId(process.env.CODEX_SESSION_ID) ||
+      sanitizeSessionId(process.env.CLAUDE_SESSION_ID);
 
     if (!sessionId) return rawInput;
 

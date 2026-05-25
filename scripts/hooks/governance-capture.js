@@ -257,7 +257,7 @@ function run(rawInput, options = {}) {
   }
 
   const sessionId = process.env.ECC_SESSION_ID || null;
-  const hookPhase = process.env.CLAUDE_HOOK_EVENT_NAME || 'unknown';
+  const hookPhase = process.env.ECC_HOOK_EVENT_NAME || process.env.CODEX_HOOK_EVENT_NAME || process.env.CLAUDE_HOOK_EVENT_NAME || 'unknown';
 
   if (options.truncated) {
     emitGovernanceEvent({

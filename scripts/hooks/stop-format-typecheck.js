@@ -39,6 +39,8 @@ function parseAccumulator(raw) {
 
 function getAccumFile() {
   const raw =
+    process.env.ECC_SESSION_ID ||
+    process.env.CODEX_SESSION_ID ||
     process.env.CLAUDE_SESSION_ID ||
     crypto.createHash('sha1').update(process.cwd()).digest('hex').slice(0, 12);
   const sessionId = raw.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 64);

@@ -37,7 +37,7 @@ The matrix below is rendered from
 | Harness or runtime | State | Supported assets | Unsupported or different surfaces | Install or onramp | Verification command | Risk notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | Claude Code | Native | Claude plugin assets; skills; commands; hooks; MCP config; local rules; statusline-oriented workflows | Claude-native hooks do not imply parity in other harnesses | `./install.sh --profile minimal --target claude`; Claude plugin install | `npm run harness:audit -- --format json`; `node scripts/session-inspect.js --list-adapters` | Avoid loading every skill by default; keep hooks opt-in and inspectable. |
-| Codex | Instruction-backed | `AGENTS.md`; Codex plugin metadata; skills; MCP reference config; command patterns | Native hook enforcement and Claude slash-command semantics are not equivalent | `./install.sh --profile minimal --target codex`; repo-local `AGENTS.md` review | `npm run harness:audit -- --format json` | Treat hooks as policy text unless a native Codex hook surface exists. |
+| Codex | Adapter-backed | `AGENTS.md`; Codex plugin metadata; skills; MCP reference config; Codex-safe hooks; command patterns | Claude true async hook execution and slash-command semantics are not equivalent in Codex | `./install.sh --profile minimal --target codex`; repo-local `AGENTS.md` review | `npm run codex:hooks:check`; `npm run harness:audit -- --format json` | Codex hooks must contain no `async` declarations; former async behavior is bounded and fail-open, not true background execution. |
 | OpenCode | Adapter-backed | OpenCode package/plugin metadata; shared skills; MCP config; event adapter patterns | Event names, plugin packaging, and command dispatch differ from Claude Code | OpenCode package or plugin surface from this repo | `node tests/scripts/build-opencode.test.js`; `npm run harness:audit -- --format json` | Keep hook logic in shared scripts and adapt only event shape at the edge. |
 | Cursor | Adapter-backed | Cursor rules; project-local skills; hook adapter; shared scripts | Cursor hook events and rule loading differ from Claude Code | `./install.sh --profile minimal --target cursor` | `node tests/lib/install-targets.test.js`; `npm run harness:audit -- --format json` | Cursor adapters must preserve existing project rules and avoid silent overwrite. |
 | Gemini | Instruction-backed | Gemini project-local instructions; shared skills; rules; compatibility docs | No full ECC hook parity; ecosystem ports must document drift from upstream ECC | `./install.sh --profile minimal --target gemini` | `node tests/lib/install-targets.test.js` | Treat Gemini ports as ecosystem adapters until validated end to end inside Gemini CLI. |
@@ -99,7 +99,7 @@ verification command, risk note, owner, source doc, or verification date.
   workflow.
 - Do not call a harness native until the adapter has an install path and a
   verification command.
-- Keep Codex, Gemini, and Zed surfaces honest when enforcement is
-  instruction-backed rather than runtime-backed.
+- Keep Codex, Gemini, and Zed surfaces honest about adapter limits, especially
+  when enforcement is instruction-backed or lacks true background async parity.
 - Treat reference-only tools as design pressure until ECC has a direct adapter.
 - Keep the terminal-only path healthy; it is the portability floor.

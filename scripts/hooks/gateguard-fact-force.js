@@ -457,7 +457,14 @@ function hashSessionKey(prefix, value) {
 }
 
 function resolveSessionKey(data) {
-  const directCandidates = [data && data.session_id, data && data.sessionId, data && data.session && data.session.id, process.env.CLAUDE_SESSION_ID, process.env.ECC_SESSION_ID];
+  const directCandidates = [
+    data && data.session_id,
+    data && data.sessionId,
+    data && data.session && data.session.id,
+    process.env.ECC_SESSION_ID,
+    process.env.CODEX_SESSION_ID,
+    process.env.CLAUDE_SESSION_ID
+  ];
 
   for (const candidate of directCandidates) {
     const sanitized = sanitizeSessionKey(candidate);
@@ -466,12 +473,12 @@ function resolveSessionKey(data) {
     }
   }
 
-  const transcriptPath = (data && (data.transcript_path || data.transcriptPath)) || process.env.CLAUDE_TRANSCRIPT_PATH;
+  const transcriptPath = (data && (data.transcript_path || data.transcriptPath)) || process.env.CODEX_TRANSCRIPT_PATH || process.env.CLAUDE_TRANSCRIPT_PATH;
   if (transcriptPath && String(transcriptPath).trim()) {
     return hashSessionKey('tx', path.resolve(String(transcriptPath).trim()));
   }
 
-  const projectFingerprint = process.env.CLAUDE_PROJECT_DIR || process.cwd();
+  const projectFingerprint = process.env.ECC_PROJECT_DIR || process.env.CODEX_PROJECT_DIR || process.env.CLAUDE_PROJECT_DIR || process.cwd();
   return hashSessionKey('proj', path.resolve(projectFingerprint));
 }
 

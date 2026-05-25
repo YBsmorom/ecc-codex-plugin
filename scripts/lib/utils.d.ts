@@ -18,6 +18,12 @@ export function getHomeDir(): string;
 /** Get the Claude config directory (~/.claude) */
 export function getClaudeDir(): string;
 
+/** Get the Codex config directory (~/.codex or CODEX_HOME) */
+export function getCodexDir(): string;
+
+/** Get the active ECC data directory for the current harness */
+export function getEccDataDir(): string;
+
 /** Get the canonical ECC sessions directory (~/.claude/session-data) */
 export function getSessionsDir(): string;
 

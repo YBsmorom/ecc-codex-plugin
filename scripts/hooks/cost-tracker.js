@@ -4,7 +4,7 @@
  *
  * Reads transcript_path from Stop hook stdin, sums usage across all
  * assistant turns in the session JSONL, and appends one row to
- * ~/.claude/metrics/costs.jsonl.
+ * the active ECC harness metrics directory.
  *
  * Stop hook stdin payload: { session_id, transcript_path, cwd, hook_event_name, ... }
  * The Stop payload does NOT include `usage` or `model` directly. The previous
@@ -26,7 +26,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { ensureDir, appendFile, getClaudeDir } = require('../lib/utils');
+const { ensureDir, appendFile, getEccDataDir } = require('../lib/utils');
 const { sanitizeSessionId } = require('../lib/session-bridge');
 
 // Approximate per-1M-token billing rates (USD).
@@ -103,11 +103,12 @@ process.stdin.on('end', () => {
 
     const transcriptPath = (typeof input.transcript_path === 'string' && input.transcript_path)
       ? input.transcript_path
-      : process.env.CLAUDE_TRANSCRIPT_PATH || null;
+      : process.env.CODEX_TRANSCRIPT_PATH || process.env.CLAUDE_TRANSCRIPT_PATH || null;
 
     const sessionId =
       sanitizeSessionId(input.session_id) ||
       sanitizeSessionId(process.env.ECC_SESSION_ID) ||
+      sanitizeSessionId(process.env.CODEX_SESSION_ID) ||
       sanitizeSessionId(process.env.CLAUDE_SESSION_ID) ||
       'default';
 
@@ -132,7 +133,7 @@ process.stdin.on('end', () => {
       (cacheReadTokens  / 1e6) * rates.cacheRead
     ) * 1e6) / 1e6;
 
-    const metricsDir = path.join(getClaudeDir(), 'metrics');
+    const metricsDir = path.join(getEccDataDir(), 'metrics');
     ensureDir(metricsDir);
 
     const row = {

@@ -701,7 +701,7 @@ async function main() {
     return;
   }
 
-  const eventName = process.env.CLAUDE_HOOK_EVENT_NAME || 'PreToolUse';
+  const eventName = process.env.ECC_HOOK_EVENT_NAME || process.env.CODEX_HOOK_EVENT_NAME || process.env.CLAUDE_HOOK_EVENT_NAME || 'PreToolUse';
   const now = Date.now();
   const statePathValue = stateFilePath();
 

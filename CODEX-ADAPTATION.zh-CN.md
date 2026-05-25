@@ -58,7 +58,7 @@ python skills/ecc-codex-orchestrator/scripts/rebuild-skill-index.py
 
 ## Codex App Hooks
 
-上游 ECC 包含 Claude Code hooks，其中一些用 `async: true` 做后台观察、质量门、成本追踪和通知。Codex app 目前会跳过 async hook，所以本适配版把原 Claude Code hook 图保存在：
+上游 ECC 包含 Claude Code hooks，其中一些用 `async: true` 做后台观察、质量门、成本追踪和通知。Codex app 目前会跳过声明了 `async` 的 hook 条目，所以本适配版把原 Claude Code hook 图保存在：
 
 ```text
 docs/upstream/claude-code-hooks.json
@@ -82,7 +82,9 @@ npm run codex:hooks:build
 npm run codex:hooks:check
 ```
 
-生成后的 Codex hook 图会省略 async-only hook，而不是把它们强行改成阻塞式 hook。这样既不会刷 Codex 的 async 警告，也不会让后台任务拖慢每次工具调用；同步安全 hook，例如 GateGuard、配置保护、MCP 健康检查和 SessionStart 仍然保留。
+生成后的 Codex hook 图不包含任何 `async` 属性。原来的 async hook 条目会转换成 Codex 支持的同步 hook 条目，并通过插件 bootstrap 运行；这些命令会使用 Codex 感知的插件根目录/数据目录解析，并保留底层 hook 已提供的 timeout 和 fail-open 行为。这样可以消除 Codex 的 `skipping async hook` 警告，同时保留观察、质量门、成本追踪、通知和会话生命周期能力。
+
+这属于 Codex 原生 hook 加载，不等于真正的后台 async 语义。Codex 仍然按它支持的 hook 生命周期执行这些条目，因此长任务必须保持有界、失败不阻塞主流程。
 
 ## MCP 处理
 

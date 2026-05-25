@@ -61,6 +61,17 @@ function setupPluginCache(homeDir, pluginSlug, orgName, version) {
   return cacheDir;
 }
 
+function setupCodexPluginCache(homeDir, sourceName, pluginSlug, version) {
+  const cacheDir = path.join(
+    homeDir, '.codex', 'plugins', 'cache',
+    sourceName, pluginSlug, version
+  );
+  const scriptDir = path.join(cacheDir, 'scripts', 'lib');
+  fs.mkdirSync(scriptDir, { recursive: true });
+  fs.writeFileSync(path.join(scriptDir, 'utils.js'), '// stub');
+  return cacheDir;
+}
+
 function runTests() {
   console.log('\n=== Testing resolve-ecc-root.js ===\n');
 
@@ -204,6 +215,27 @@ function runTests() {
     }
   })) passed++; else failed++;
 
+  if (test('discovers Codex plugin cache when runtime is codex', () => {
+    const homeDir = createTempDir();
+    try {
+      const expected = setupCodexPluginCache(homeDir, 'local-user-plugins', 'ecc', CURRENT_PACKAGE_VERSION);
+      const result = resolveEccRoot({ envRoot: '', homeDir, runtime: 'codex' });
+      assert.strictEqual(result, expected);
+    } finally {
+      fs.rmSync(homeDir, { recursive: true, force: true });
+    }
+  })) passed++; else failed++;
+
+  if (test('falls back to ~/.codex when runtime is codex and nothing is found', () => {
+    const homeDir = createTempDir();
+    try {
+      const result = resolveEccRoot({ envRoot: '', homeDir, runtime: 'codex' });
+      assert.strictEqual(result, path.join(homeDir, '.codex'));
+    } finally {
+      fs.rmSync(homeDir, { recursive: true, force: true });
+    }
+  })) passed++; else failed++;
+
   if (test('prefers standard install over plugin cache', () => {
     const homeDir = createTempDir();
     try {
@@ -318,6 +350,23 @@ function runTests() {
       const { execFileSync } = require('child_process');
       const result = execFileSync('node', [
         '-e', `console.log(${INLINE_RESOLVE})`,
+      ], {
+        env: { PATH: process.env.PATH, HOME: homeDir, USERPROFILE: homeDir },
+        encoding: 'utf8',
+      }).trim();
+      assert.strictEqual(result, expected);
+    } finally {
+      fs.rmSync(homeDir, { recursive: true, force: true });
+    }
+  })) passed++; else failed++;
+
+  if (test('INLINE_RESOLVE discovers Codex plugin cache when runtime is codex', () => {
+    const homeDir = createTempDir();
+    try {
+      const expected = setupCodexPluginCache(homeDir, 'local-user-plugins', 'ecc', CURRENT_PACKAGE_VERSION);
+      const { execFileSync } = require('child_process');
+      const result = execFileSync('node', [
+        '-e', `process.env.ECC_HOOK_RUNTIME='codex'; console.log(${INLINE_RESOLVE})`,
       ], {
         env: { PATH: process.env.PATH, HOME: homeDir, USERPROFILE: homeDir },
         encoding: 'utf8',

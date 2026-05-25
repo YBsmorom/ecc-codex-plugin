@@ -22,7 +22,7 @@ For the operator-facing support matrix and scorecard workflow, see
 |---------|---------------|-----------------|----------------|
 | Skills | `skills/*/SKILL.md` | Claude plugin, Codex plugin, `.agents/skills`, Cursor skill copies, OpenCode plugin/config | Supported with harness-specific packaging |
 | Rules and instructions | `rules/`, `AGENTS.md`, translated docs | Claude rules install, Codex `AGENTS.md`, Cursor rules, OpenCode instructions | Supported, but not identical across harnesses |
-| Hooks | `hooks/hooks.json`, `scripts/hooks/` | Claude native hooks, OpenCode plugin events, Cursor hook adapter | Hook-backed in Claude/OpenCode/Cursor; instruction-backed in Codex |
+| Hooks | `hooks/hooks.json`, `scripts/hooks/` | Claude native hooks, Codex-safe hook graph, OpenCode plugin events, Cursor hook adapter | Hook-backed with harness-specific parity limits |
 | MCPs | `.mcp.json`, `mcp-configs/` | Native MCP config import per harness | Supported where the harness exposes MCP |
 | Commands | `commands/`, CLI scripts | Claude slash commands, compatibility shims, CLI entrypoints | Supported, but command semantics vary |
 | Sessions | `ecc2/`, session adapters, orchestration scripts | TUI/daemon, tmux/worktree orchestration, harness-specific runners | Alpha |
@@ -46,7 +46,7 @@ The same source skill can be installed into multiple harnesses because it is mos
 Each harness has different loading and enforcement behavior:
 
 - Claude Code loads plugin assets and has native hook execution.
-- Codex reads `AGENTS.md`, plugin metadata, skills, and MCP config, but hook parity is instruction-driven.
+- Codex reads `AGENTS.md`, plugin metadata, skills, MCP config, and the Codex-safe hook graph. Hook parity is adapter-backed because Codex does not support Claude's true background async semantics.
 - OpenCode has a plugin/event system that can reuse ECC hook logic through an adapter layer.
 - Cursor uses its own rule and hook layout, so ECC maintains translated surfaces under `.cursor/`.
 - Gemini support is install/instruction oriented and should be treated as a compatibility surface, not as full hook parity.
@@ -94,7 +94,7 @@ The workflow is:
 
 Claude Code gets the skill through the Claude plugin surface and can enforce related hooks natively.
 
-Codex reads the repo instructions, `.codex-plugin/plugin.json`, and the MCP reference config. The same skill source still describes the workflow, but hook parity is instruction-backed unless Codex adds a native hook surface.
+Codex reads the repo instructions, `.codex-plugin/plugin.json`, the MCP reference config, and the generated Codex-safe `hooks/hooks.json`. The same skill source still describes the workflow; hook parity is adapter-backed, with former Claude async hooks converted into bounded Codex hook entries rather than true background async execution.
 
 OpenCode gets the skill through the OpenCode package/plugin surface. Event handling can reuse ECC hook logic through the adapter layer, while the skill text stays unchanged.
 
@@ -106,7 +106,7 @@ Supported today:
 
 - shared skill source in `skills/`
 - Claude Code plugin packaging
-- Codex plugin metadata and MCP reference config
+- Codex plugin metadata, MCP reference config, and Codex-safe hooks
 - OpenCode package/plugin surface
 - Cursor-adapted rules, hooks, and skills
 - `ecc2/` as an alpha Rust control plane

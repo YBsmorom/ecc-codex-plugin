@@ -2444,14 +2444,22 @@ async function runTests() {
       assert.ok(hooks.hooks.SessionStart, 'Should have SessionStart hooks');
       assert.ok(hooks.hooks.Stop, 'Should have Stop hooks');
       assert.ok(hooks.hooks.PreCompact, 'Should have PreCompact hooks');
-      assert.ok(!hooks.hooks.SessionEnd, 'Codex hook graph should omit async-only SessionEnd hooks');
+      assert.ok(hooks.hooks.SessionEnd, 'Should have SessionEnd hooks adapted for Codex');
+
+      for (const hookArray of Object.values(hooks.hooks)) {
+        for (const entry of hookArray) {
+          for (const hook of entry.hooks || []) {
+            assert.ok(!Object.prototype.hasOwnProperty.call(hook, 'async'), 'Codex hook graph should not declare async hooks');
+          }
+        }
+      }
     })
   )
     passed++;
   else failed++;
 
   if (
-    test('Codex hooks.json keeps the sync Bash dispatcher and preserves the async post dispatcher upstream', () => {
+    test('Codex hooks.json adapts both Bash dispatchers and preserves async upstream metadata', () => {
       const hooksPath = path.join(__dirname, '..', '..', 'hooks', 'hooks.json');
       const hooks = JSON.parse(fs.readFileSync(hooksPath, 'utf8'));
       const claudeHooksPath = path.join(__dirname, '..', '..', 'docs', 'upstream', 'claude-code-hooks.json');
@@ -2462,20 +2470,27 @@ async function runTests() {
       const claudePostBash = claudeHooks.hooks.PostToolUse.filter(entry => entry.matcher === 'Bash');
 
       assert.strictEqual(preBash.length, 1, 'Should have exactly one PreToolUse Bash dispatcher');
-      assert.strictEqual(postBash.length, 0, 'Codex hook graph should omit the async PostToolUse Bash dispatcher');
+      assert.strictEqual(postBash.length, 1, 'Codex hook graph should adapt the PostToolUse Bash dispatcher');
       assert.strictEqual(claudePostBash.length, 1, 'Claude source graph should preserve the PostToolUse Bash dispatcher');
       assert.strictEqual(preBash[0].id, 'pre:bash:dispatcher');
+      assert.strictEqual(postBash[0].id, 'post:bash:dispatcher');
       assert.strictEqual(claudePostBash[0].id, 'post:bash:dispatcher');
+      assert.ok(!Object.prototype.hasOwnProperty.call(postBash[0].hooks[0], 'async'), 'Codex PostToolUse Bash hook should not declare async');
+      assert.strictEqual(claudePostBash[0].hooks[0].async, true, 'Claude source PostToolUse Bash hook should preserve async metadata');
 
       const preCommand = Array.isArray(preBash[0].hooks[0].command)
         ? preBash[0].hooks[0].command.join(' ')
         : preBash[0].hooks[0].command;
-      const postCommand = Array.isArray(claudePostBash[0].hooks[0].command)
+      const postCommand = Array.isArray(postBash[0].hooks[0].command)
+        ? postBash[0].hooks[0].command.join(' ')
+        : postBash[0].hooks[0].command;
+      const claudePostCommand = Array.isArray(claudePostBash[0].hooks[0].command)
         ? claudePostBash[0].hooks[0].command.join(' ')
         : claudePostBash[0].hooks[0].command;
 
       assert.ok(preCommand.includes('pre-bash-dispatcher.js'), 'PreToolUse Bash hook should use the pre dispatcher');
-      assert.ok(postCommand.includes('post-bash-dispatcher.js'), 'Claude PostToolUse Bash hook should use the post dispatcher');
+      assert.ok(postCommand.includes('plugin-hook-bootstrap.js'), 'Codex PostToolUse Bash hook should use the plugin bootstrap');
+      assert.ok(claudePostCommand.includes('post-bash-dispatcher.js'), 'Claude PostToolUse Bash hook should use the post dispatcher');
     })
   )
     passed++;

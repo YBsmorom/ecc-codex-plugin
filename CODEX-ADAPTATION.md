@@ -58,7 +58,7 @@ python skills/ecc-codex-orchestrator/scripts/rebuild-skill-index.py
 
 ## Codex App Hooks
 
-Upstream ECC includes Claude Code hooks that use `async: true` for background observation, quality gates, cost tracking, and notifications. Codex app currently skips async hooks, so this adapter keeps the original Claude Code graph at:
+Upstream ECC includes Claude Code hooks that use `async: true` for background observation, quality gates, cost tracking, and notifications. Codex app currently skips hook entries that declare `async`, so this adapter keeps the original Claude Code graph at:
 
 ```text
 docs/upstream/claude-code-hooks.json
@@ -82,7 +82,9 @@ and checked by:
 npm run codex:hooks:check
 ```
 
-The generated Codex hook graph omits async-only hook entries instead of converting them into blocking hooks. That preserves Codex responsiveness while keeping synchronous safety hooks such as GateGuard, config protection, MCP health checks, and session start behavior available.
+The generated Codex hook graph contains no `async` properties. Former async hook entries are adapted into Codex-supported synchronous hook entries that run through the plugin bootstrap with Codex-aware root/data directory resolution, timeouts, and fail-open behavior where the underlying hook provides it. This removes the Codex `skipping async hook` warnings while keeping observation, quality-gate, cost-tracking, notification, and session lifecycle surfaces available.
+
+This is Codex-native hook loading, not true background async parity. Codex still runs these entries on its supported hook lifecycle, so long-running behavior must stay bounded and non-blocking in practice.
 
 ## MCP Handling
 

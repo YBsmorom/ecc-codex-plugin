@@ -11,6 +11,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { INLINE_RESOLVE } = require('../lib/resolve-ecc-root');
 
 const repoRoot = path.resolve(__dirname, '..', '..');
 const defaultSource = path.join(repoRoot, 'docs', 'upstream', 'claude-code-hooks.json');
@@ -45,8 +46,8 @@ function usage() {
   return [
     'Usage: node scripts/codex/build-codex-hooks.js [--check] [--source <file>] [--output <file>]',
     '',
-    'Builds hooks/hooks.json from docs/upstream/claude-code-hooks.json by removing',
-    'command hooks that require async execution and omitting all async properties.',
+    'Builds hooks/hooks.json from docs/upstream/claude-code-hooks.json by converting',
+    'Claude async hooks into Codex-supported synchronous hooks and omitting async properties.',
   ].join('\n');
 }
 
@@ -58,13 +59,58 @@ function stableJson(value) {
   return `${JSON.stringify(value, null, 2)}\n`;
 }
 
-function sanitizeHook(hook) {
-  if (hook && hook.async === true) {
+function escapeDoubleQuotedJs(value) {
+  return String(value)
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"');
+}
+
+function extractBootstrapSuffix(command) {
+  const suffix = String(command || '').match(/" node (.+)$/);
+  return suffix ? suffix[1] : null;
+}
+
+function extractRunWithFlagsSuffix(command) {
+  const spawnArgs = String(command || '').match(/spawnSync\(process\.execPath,\[script,'([^']+)','([^']+)','([^']+)'\]/);
+  if (!spawnArgs) {
     return null;
   }
 
+  return `scripts/hooks/run-with-flags.js ${spawnArgs[1]} ${spawnArgs[2]} ${spawnArgs[3]}`;
+}
+
+function buildCodexBootstrapCommand(suffix) {
+  const bootstrap = [
+    "process.env.ECC_HOOK_RUNTIME='codex'",
+    `const p=require('path'),r=${INLINE_RESOLVE}`,
+    'process.env.ECC_PLUGIN_ROOT=r',
+    'process.env.CODEX_PLUGIN_ROOT=r',
+    'process.env.CLAUDE_PLUGIN_ROOT=r',
+    "const s=p.join(r,'scripts/hooks/plugin-hook-bootstrap.js')",
+    'process.argv.splice(1,0,s)',
+    'require(s)',
+  ].join(';');
+
+  return `node -e "${escapeDoubleQuotedJs(bootstrap)}" node ${suffix}`;
+}
+
+function adaptHookCommandForCodex(command) {
+  if (typeof command !== 'string') {
+    return command;
+  }
+
+  const suffix = extractBootstrapSuffix(command) || extractRunWithFlagsSuffix(command);
+  if (!suffix) {
+    return command;
+  }
+
+  return buildCodexBootstrapCommand(suffix);
+}
+
+function sanitizeHook(hook) {
   const next = { ...hook };
   delete next.async;
+  next.command = adaptHookCommandForCodex(next.command);
   return next;
 }
 
@@ -102,9 +148,7 @@ function buildCodexHooks(source) {
       throw new Error(`Expected hooks.${eventName} to be an array`);
     }
 
-    const filteredEntries = entries
-      .map(sanitizeMatcherEntry)
-      .filter(Boolean);
+    const filteredEntries = entries.map(sanitizeMatcherEntry).filter(Boolean);
 
     if (filteredEntries.length > 0) {
       next.hooks[eventName] = filteredEntries;
@@ -162,7 +206,7 @@ function main() {
   console.log(
     `Codex hooks ${options.check ? 'checked' : 'built'}: ` +
     `${countMatchers(source)} Claude matchers -> ${countMatchers(codexHooks)} Codex matchers; ` +
-    `${countAsyncHooks(source)} async hook entries omitted.`,
+    `${countAsyncHooks(source)} async hook entries converted to Codex sync hooks.`,
   );
 }
 
@@ -177,6 +221,8 @@ if (require.main === module) {
 
 module.exports = {
   buildCodexHooks,
+  adaptHookCommandForCodex,
+  buildCodexBootstrapCommand,
   countAsyncHooks,
   countMatchers,
 };

@@ -5,12 +5,12 @@ Hooks are event-driven automations that fire before or after agent tool executio
 ## How Hooks Work
 
 ```
-User request → Claude picks a tool → PreToolUse hook runs → Tool executes → PostToolUse hook runs
+User request -> agent picks a tool -> PreToolUse hook runs -> Tool executes -> PostToolUse hook runs
 ```
 
 - **PreToolUse** hooks run before the tool executes. They can **block** (exit code 2) or **warn** (stderr without blocking).
 - **PostToolUse** hooks run after the tool completes. They can analyze output but cannot block.
-- **Stop** hooks run after each Claude response.
+- **Stop** hooks run after each agent response.
 - **SessionStart/SessionEnd** hooks run at session lifecycle boundaries.
 - **PreCompact** hooks run before context compaction, useful for saving state.
 
@@ -19,14 +19,14 @@ User request → Claude picks a tool → PreToolUse hook runs → Tool executes 
 Memory persistence lifecycle definitions live in `hooks/memory-persistence/`.
 The executable hook graph remains `hooks/hooks.json`; the memory persistence directory is the stable contract for SessionStart, PreCompact, observation, activity tracking, and SessionEnd behavior.
 
-In this Codex adapter fork, `hooks/hooks.json` is the Codex app compatible hook graph. It is generated from the preserved Claude Code source hook graph at `docs/upstream/claude-code-hooks.json` by omitting hooks that require asynchronous execution. Rebuild or check it with:
+In this Codex adapter fork, `hooks/hooks.json` is the Codex app compatible hook graph. It is generated from the preserved Claude Code source hook graph at `docs/upstream/claude-code-hooks.json` by converting unsupported async declarations into Codex-supported synchronous hook entries. Rebuild or check it with:
 
 ```bash
 npm run codex:hooks:build
 npm run codex:hooks:check
 ```
 
-Codex app currently skips hooks that declare `async: true`, so the active Codex hook graph intentionally contains no `async` properties.
+Codex app currently skips hooks that declare `async: true`, so the active Codex hook graph intentionally contains no `async` properties. Former async entries run through the Codex plugin bootstrap with Codex-aware root/data directory resolution, timeouts, and fail-open behavior where the underlying hook provides it.
 
 ## Installing These Hooks Manually
 
@@ -60,7 +60,7 @@ That installs resolved hooks to `~/.claude/hooks/hooks.json`. On Windows, the Cl
 | Hook | Matcher | What It Does |
 |------|---------|-------------|
 | **PR logger** | `Bash` | Logs PR URL and review command after `gh pr create` |
-| **Build analysis** | `Bash` | Background analysis after build commands (async, non-blocking) |
+| **Build analysis** | `Bash` | Bounded post-command analysis/logging through the Codex hook adapter |
 | **Quality gate** | `Edit\|Write\|MultiEdit` | Runs fast quality checks after edits |
 | **Design quality check** | `Edit\|Write\|MultiEdit` | Warns when frontend edits drift toward generic template-looking UI |
 | **Prettier format** | `Edit` | Auto-formats JS/TS files with Prettier after edits |
@@ -200,7 +200,7 @@ Claude Code supports hooks that should not block the main flow (e.g., background
 }
 ```
 
-Async hooks run in the background. They cannot block tool execution. Codex app does not support async hooks yet; keep async entries out of the active `hooks/hooks.json` surface.
+Async hooks run in the background in Claude Code. They cannot block tool execution there. Codex app does not support async hooks yet; keep `async` properties out of the active `hooks/hooks.json` surface. For Codex, generate the active graph with `npm run codex:hooks:build` so former async capabilities are adapted into bounded synchronous hook entries instead of being declared as async.
 
 ## Common Hook Recipes
 

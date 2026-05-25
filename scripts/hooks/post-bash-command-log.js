@@ -2,8 +2,8 @@
 'use strict';
 
 const fs = require('fs');
-const os = require('os');
 const path = require('path');
+const { getEccDataDir } = require('../lib/utils');
 
 const MAX_STDIN = 1024 * 1024;
 let raw = '';
@@ -45,7 +45,7 @@ function run(rawInput, mode = 'audit') {
     if (config) {
       const input = String(rawInput || '').trim() ? JSON.parse(String(rawInput)) : {};
       const command = sanitizeCommand(input.tool_input?.command || '?');
-      appendLine(path.join(os.homedir(), '.claude', config.fileName), config.format(command));
+      appendLine(path.join(getEccDataDir(), config.fileName), config.format(command));
     }
   } catch {
     // Logging must never block the calling hook.

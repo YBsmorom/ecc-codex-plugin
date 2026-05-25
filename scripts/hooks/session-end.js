@@ -191,7 +191,7 @@ async function main() {
     // Malformed stdin: fall through to the env-var fallback below.
   }
   if (!transcriptPath) {
-    const envTranscriptPath = process.env.CLAUDE_TRANSCRIPT_PATH;
+    const envTranscriptPath = process.env.CODEX_TRANSCRIPT_PATH || process.env.CLAUDE_TRANSCRIPT_PATH;
     if (typeof envTranscriptPath === 'string' && envTranscriptPath.length > 0) {
       transcriptPath = envTranscriptPath;
     }

@@ -23,6 +23,8 @@ const MAX_STDIN = 1024 * 1024;
 
 function getAccumFile() {
   const raw =
+    process.env.ECC_SESSION_ID ||
+    process.env.CODEX_SESSION_ID ||
     process.env.CLAUDE_SESSION_ID ||
     crypto.createHash('sha1').update(process.cwd()).digest('hex').slice(0, 12);
   // Strip path separators and traversal sequences so the value is safe to embed

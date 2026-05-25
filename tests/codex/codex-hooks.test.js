@@ -17,6 +17,7 @@ const codexHooksPath = path.join(repoRoot, 'hooks', 'hooks.json');
 const buildScriptPath = path.join(repoRoot, 'scripts', 'codex', 'build-codex-hooks.js');
 
 const {
+  adaptHookCommandForCodex,
   buildCodexHooks,
   countAsyncHooks,
 } = require(buildScriptPath);
@@ -70,14 +71,49 @@ test('active Codex hook graph is generated from the preserved Claude graph', () 
   assert.deepStrictEqual(codexHooks, buildCodexHooks(claudeHooks));
 });
 
-test('Codex hook graph keeps synchronous safety hooks and omits async-only hooks', () => {
+test('Codex hook graph converts async-only Claude capabilities into supported sync hooks', () => {
   const ids = collectHookIds(codexHooks);
   assert.ok(ids.includes('pre:bash:dispatcher'));
   assert.ok(ids.includes('pre:edit-write:gateguard-fact-force'));
   assert.ok(ids.includes('session:start'));
   assert.ok(ids.includes('pre:compact'));
-  assert.ok(!ids.includes('post:quality-gate'));
-  assert.ok(!ids.includes('stop:cost-tracker'));
+
+  for (const id of [
+    'pre:observe:continuous-learning',
+    'post:bash:dispatcher',
+    'post:quality-gate',
+    'post:observe:continuous-learning',
+    'stop:session-end',
+    'stop:evaluate-session',
+    'stop:cost-tracker',
+    'stop:desktop-notify',
+    'session:end:marker',
+  ]) {
+    assert.ok(ids.includes(id), `expected ${id} in the Codex hook graph`);
+  }
+});
+
+test('generated Codex hook commands resolve Codex plugin roots natively', () => {
+  const commandTexts = Object.values(codexHooks.hooks)
+    .flat()
+    .flatMap(entry => entry.hooks || [])
+    .map(hook => hook.command)
+    .filter(command => typeof command === 'string');
+
+  assert.ok(commandTexts.length > 0);
+  for (const command of commandTexts) {
+    assert.ok(command.includes("ECC_HOOK_RUNTIME='codex'"), 'command should mark Codex runtime');
+    assert.ok(command.includes('CODEX_PLUGIN_ROOT'), 'command should expose CODEX_PLUGIN_ROOT');
+    assert.ok(command.includes("'.codex'"), 'command should search the Codex home/cache');
+    assert.ok(!command.includes('${CLAUDE_PLUGIN_ROOT}'), 'command should not depend on shell placeholder expansion');
+  }
+});
+
+test('Codex command adapter rewrites Stop hook inline spawns to plugin bootstrap form', () => {
+  const stopHook = claudeHooks.hooks.Stop.find(entry => entry.id === 'stop:cost-tracker').hooks[0];
+  const adapted = adaptHookCommandForCodex(stopHook.command);
+  assert.ok(adapted.includes('plugin-hook-bootstrap.js'));
+  assert.ok(adapted.includes('scripts/hooks/run-with-flags.js stop:cost-tracker scripts/hooks/cost-tracker.js minimal,standard,strict'));
 });
 
 test('codex hook generator check mode passes against the checked-in output', () => {

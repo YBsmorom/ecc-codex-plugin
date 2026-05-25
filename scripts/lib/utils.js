@@ -40,17 +40,45 @@ function getClaudeDir() {
 }
 
 /**
+ * Get the Codex config directory.
+ */
+function getCodexDir() {
+  const explicit = process.env.CODEX_HOME;
+  if (explicit && explicit.trim().length > 0) {
+    return path.resolve(explicit);
+  }
+  return path.join(getHomeDir(), '.codex');
+}
+
+/**
+ * Get the active harness data directory.
+ *
+ * Defaults to Claude for backwards compatibility. Codex-generated hooks set
+ * ECC_HOOK_RUNTIME=codex so session summaries, metrics, and learned skills
+ * stay under the user's Codex directory rather than ~/.claude.
+ */
+function getEccDataDir() {
+  const explicit = process.env.ECC_DATA_DIR;
+  if (explicit && explicit.trim().length > 0) {
+    return path.resolve(explicit);
+  }
+
+  const runtime = String(process.env.ECC_HOOK_RUNTIME || process.env.ECC_HARNESS || '').trim().toLowerCase();
+  return runtime === 'codex' ? getCodexDir() : getClaudeDir();
+}
+
+/**
  * Get the sessions directory
  */
 function getSessionsDir() {
-  return path.join(getClaudeDir(), SESSION_DATA_DIR_NAME);
+  return path.join(getEccDataDir(), SESSION_DATA_DIR_NAME);
 }
 
 /**
  * Get the legacy sessions directory used by older ECC installs
  */
 function getLegacySessionsDir() {
-  return path.join(getClaudeDir(), LEGACY_SESSIONS_DIR_NAME);
+  return path.join(getEccDataDir(), LEGACY_SESSIONS_DIR_NAME);
 }
 
 /**
@@ -64,7 +92,7 @@ function getSessionSearchDirs() {
  * Get the learned skills directory
  */
 function getLearnedSkillsDir() {
-  return path.join(getClaudeDir(), 'skills', 'learned');
+  return path.join(getEccDataDir(), 'skills', 'learned');
 }
 
 /**
@@ -169,11 +197,11 @@ function sanitizeSessionId(raw) {
 }
 
 /**
- * Get short session ID from CLAUDE_SESSION_ID environment variable
+ * Get short session ID from the active harness session ID environment variable
  * Returns last 8 characters, falls back to a sanitized project name then 'default'.
  */
 function getSessionIdShort(fallback = 'default') {
-  const sessionId = process.env.CLAUDE_SESSION_ID;
+  const sessionId = process.env.ECC_SESSION_ID || process.env.CODEX_SESSION_ID || process.env.CLAUDE_SESSION_ID;
   if (sessionId && sessionId.length > 0) {
     const sanitized = sanitizeSessionId(sessionId.slice(-8));
     if (sanitized) return sanitized;
@@ -586,6 +614,8 @@ module.exports = {
   // Directories
   getHomeDir,
   getClaudeDir,
+  getCodexDir,
+  getEccDataDir,
   getSessionsDir,
   getLegacySessionsDir,
   getSessionSearchDirs,
