@@ -58,6 +58,8 @@ stay below provider length limits.
 
 - The `skills/` directory at the repo root is shared between Claude Code (`.claude-plugin/`)
   and Codex (`.codex-plugin/`) — same source of truth, no duplication
+- The active `hooks/hooks.json` is Codex-safe and contains no `async` hook entries. The preserved
+  Claude Code source graph lives at `docs/upstream/claude-code-hooks.json`.
 - ECC is moving to a skills-first workflow surface. Legacy `commands/` remain for
   compatibility on harnesses that still expect slash-entry shims.
 - MCP server credentials are inherited from the launching environment (env vars)

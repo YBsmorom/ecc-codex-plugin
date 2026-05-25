@@ -319,6 +319,8 @@
     "discussion:audit": "node scripts/discussion-audit.js",
     "security:ioc-scan": "node scripts/ci/scan-supply-chain-iocs.js",
     "security:advisory-sources": "node scripts/ci/supply-chain-advisory-sources.js",
+    "codex:hooks:build": "node scripts/codex/build-codex-hooks.js",
+    "codex:hooks:check": "node scripts/codex/build-codex-hooks.js --check",
     "claw": "node scripts/claw.js",
     "orchestrate:status": "node scripts/orchestration-status.js",
     "orchestrate:worker": "bash scripts/orchestrate-codex-worker.sh",

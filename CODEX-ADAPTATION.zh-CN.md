@@ -56,6 +56,34 @@ skills/ecc-codex-orchestrator/SKILL.md
 python skills/ecc-codex-orchestrator/scripts/rebuild-skill-index.py
 ```
 
+## Codex App Hooks
+
+上游 ECC 包含 Claude Code hooks，其中一些用 `async: true` 做后台观察、质量门、成本追踪和通知。Codex app 目前会跳过 async hook，所以本适配版把原 Claude Code hook 图保存在：
+
+```text
+docs/upstream/claude-code-hooks.json
+```
+
+实际给 Codex 加载的是：
+
+```text
+hooks/hooks.json
+```
+
+生成命令：
+
+```bash
+npm run codex:hooks:build
+```
+
+检查命令：
+
+```bash
+npm run codex:hooks:check
+```
+
+生成后的 Codex hook 图会省略 async-only hook，而不是把它们强行改成阻塞式 hook。这样既不会刷 Codex 的 async 警告，也不会让后台任务拖慢每次工具调用；同步安全 hook，例如 GateGuard、配置保护、MCP 健康检查和 SessionStart 仍然保留。
+
 ## MCP 处理
 
 ECC 包含 GitHub、Context7、Exa、Memory、Playwright、Sequential Thinking 等 MCP 服务。Codex 环境中可能已经有官方插件或用户级 MCP 提供类似能力。

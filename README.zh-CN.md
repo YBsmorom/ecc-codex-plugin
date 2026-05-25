@@ -42,6 +42,7 @@ git clone https://github.com/YBsmorom/ecc-codex-plugin.git
 - `skills/ecc-codex-orchestrator/references/skill-index.json`：ECC 技能生成索引。
 - `skills/ecc-codex-orchestrator/references/routing-map.json`：任务分类、候选技能和伴随验证规则。
 - `skills/ecc-codex-orchestrator/references/mcp-routing-policy.md`：Codex 环境下的 MCP/工具重复处理策略。
+- `hooks/hooks.json`：从保留的 Claude Code hooks 生成的 Codex-safe hook 图，不包含 async 条目。
 - `.mcp.json`：GitHub、Context7、Exa、Memory、Playwright、Sequential Thinking 的便携 MCP 配置。
 - 中英文安装和适配说明。
 

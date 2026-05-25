@@ -283,6 +283,8 @@ async function runTests() {
   const scriptsDir = path.join(__dirname, '..', '..', 'scripts', 'hooks');
   const hooksJsonPath = path.join(__dirname, '..', '..', 'hooks', 'hooks.json');
   const hooks = JSON.parse(fs.readFileSync(hooksJsonPath, 'utf8'));
+  const claudeHooksJsonPath = path.join(__dirname, '..', '..', 'docs', 'upstream', 'claude-code-hooks.json');
+  const claudeHooks = JSON.parse(fs.readFileSync(claudeHooksJsonPath, 'utf8'));
 
   // ==========================================
   // Input Format Tests
@@ -675,7 +677,7 @@ async function runTests() {
   })) passed++; else failed++;
 
   if (await asyncTest('PostToolUse PR hook extracts PR URL', async () => {
-    const hookCommand = getHookCommandById(hooks, 'PostToolUse', 'post:bash:dispatcher');
+    const hookCommand = getHookCommandById(claudeHooks, 'PostToolUse', 'post:bash:dispatcher');
     const result = await runHookCommand(hookCommand, {
       tool_input: { command: 'gh pr create --title "Test"' },
       tool_output: { output: 'Creating pull request...\nhttps://github.com/owner/repo/pull/123' }
@@ -940,11 +942,19 @@ async function runTests() {
   console.log('\nRound 51: hooks.json Schema Validation:');
 
   if (await asyncTest('hooks.json async hook has valid timeout field', async () => {
-    const asyncHook = hooks.hooks.PostToolUse.find(h =>
+    for (const hookDefs of Object.values(hooks.hooks)) {
+      for (const hookDef of hookDefs) {
+        for (const hook of hookDef.hooks || []) {
+          assert.notStrictEqual(hook.async, true, 'Codex hooks.json should not contain async hooks');
+        }
+      }
+    }
+
+    const asyncHook = claudeHooks.hooks.PostToolUse.find(h =>
       h.hooks && h.hooks[0] && h.hooks[0].async === true
     );
 
-    assert.ok(asyncHook, 'Should have at least one async hook defined');
+    assert.ok(asyncHook, 'Claude source graph should have at least one async hook defined');
     assert.strictEqual(asyncHook.hooks[0].async, true, 'async field should be true');
     assert.ok(asyncHook.hooks[0].timeout, 'Should have timeout field');
     assert.strictEqual(typeof asyncHook.hooks[0].timeout, 'number', 'Timeout should be a number');

@@ -1,6 +1,6 @@
 # Hooks
 
-Hooks are event-driven automations that fire before or after Claude Code tool executions. They enforce code quality, catch mistakes early, and automate repetitive checks.
+Hooks are event-driven automations that fire before or after agent tool executions. They enforce code quality, catch mistakes early, and automate repetitive checks.
 
 ## How Hooks Work
 
@@ -19,9 +19,18 @@ User request → Claude picks a tool → PreToolUse hook runs → Tool executes 
 Memory persistence lifecycle definitions live in `hooks/memory-persistence/`.
 The executable hook graph remains `hooks/hooks.json`; the memory persistence directory is the stable contract for SessionStart, PreCompact, observation, activity tracking, and SessionEnd behavior.
 
+In this Codex adapter fork, `hooks/hooks.json` is the Codex app compatible hook graph. It is generated from the preserved Claude Code source hook graph at `docs/upstream/claude-code-hooks.json` by omitting hooks that require asynchronous execution. Rebuild or check it with:
+
+```bash
+npm run codex:hooks:build
+npm run codex:hooks:check
+```
+
+Codex app currently skips hooks that declare `async: true`, so the active Codex hook graph intentionally contains no `async` properties.
+
 ## Installing These Hooks Manually
 
-For Claude Code manual installs, do not paste the raw repo `hooks.json` into `~/.claude/settings.json` or copy it directly into `~/.claude/hooks/hooks.json`. The checked-in file is plugin/repo-oriented and is meant to be installed through the ECC installer or loaded as a plugin.
+For Claude Code manual installs, do not paste the raw repo `hooks.json` into `~/.claude/settings.json` or copy it directly into `~/.claude/hooks/hooks.json`. In this fork, the checked-in active file is Codex-oriented. Claude Code operators should use upstream ECC or the preserved source hook graph as reference material.
 
 Use the installer instead so hook commands are rewritten against your actual Claude root:
 
@@ -180,7 +189,7 @@ interface HookInput {
 
 ### Async Hooks
 
-For hooks that should not block the main flow (e.g., background analysis):
+Claude Code supports hooks that should not block the main flow (e.g., background analysis):
 
 ```json
 {
@@ -191,7 +200,7 @@ For hooks that should not block the main flow (e.g., background analysis):
 }
 ```
 
-Async hooks run in the background. They cannot block tool execution.
+Async hooks run in the background. They cannot block tool execution. Codex app does not support async hooks yet; keep async entries out of the active `hooks/hooks.json` surface.
 
 ## Common Hook Recipes
 

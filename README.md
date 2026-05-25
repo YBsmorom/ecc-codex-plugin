@@ -106,6 +106,7 @@ ECC only removes files recorded in its install-state. If you installed through t
 - `skills/ecc-codex-orchestrator/references/skill-index.json`, a generated index of ECC skills.
 - `skills/ecc-codex-orchestrator/references/routing-map.json`, task classification and companion-skill rules.
 - `skills/ecc-codex-orchestrator/references/mcp-routing-policy.md`, duplicate MCP/tool handling for Codex.
+- `hooks/hooks.json`, a Codex-safe hook graph generated from the preserved Claude Code hooks without async entries.
 - `.mcp.json` with portable MCP server definitions for GitHub, Context7, Exa, Memory, Playwright, and Sequential Thinking.
 - Bilingual installation and adaptation documentation.
 
@@ -161,6 +162,8 @@ Before publishing, the plugin should pass:
 
 ```powershell
 python <codex-home>\skills\.system\plugin-creator\scripts\validate_plugin.py <repo-path>
+npm run codex:hooks:check
+npm test
 ```
 
 The repository should also be scanned for real credentials before public push. Test fixtures may contain fake secret-like strings for security scanners; real `.env` files must not be committed.

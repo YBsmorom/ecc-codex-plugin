@@ -13,7 +13,7 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const repoRoot = path.resolve(__dirname, '..', '..');
-const hooksJsonPath = path.join(repoRoot, 'hooks', 'hooks.json');
+const claudeHooksJsonPath = path.join(repoRoot, 'docs', 'upstream', 'claude-code-hooks.json');
 const runWithFlagsPath = path.join(repoRoot, 'scripts', 'hooks', 'run-with-flags.js');
 const observeRunner = require(path.join(repoRoot, 'scripts', 'hooks', 'observe-runner.js'));
 
@@ -30,10 +30,10 @@ function test(name, fn) {
 }
 
 function loadHook(id) {
-  const hookGroups = JSON.parse(fs.readFileSync(hooksJsonPath, 'utf8')).hooks;
+  const hookGroups = JSON.parse(fs.readFileSync(claudeHooksJsonPath, 'utf8')).hooks;
   const hooks = Object.values(hookGroups).flat();
   const hook = hooks.find(candidate => candidate.id === id);
-  assert.ok(hook, `Expected ${id} in hooks/hooks.json`);
+  assert.ok(hook, `Expected ${id} in docs/upstream/claude-code-hooks.json`);
   assert.ok(Array.isArray(hook.hooks), `Expected ${id} to define hook commands`);
   assert.strictEqual(hook.hooks.length, 1, `Expected ${id} to have one command`);
   return hook.hooks[0].command;
@@ -114,14 +114,14 @@ function runTests() {
   let passed = 0;
   let failed = 0;
 
-  if (test('observe hooks use node-mode runner instead of shell-mode dispatch', () => {
+  if (test('Claude observe hooks use node-mode runner instead of shell-mode dispatch', () => {
     for (const hookId of ['pre:observe:continuous-learning', 'post:observe:continuous-learning']) {
       const command = loadHook(hookId);
       const phase = hookId.startsWith('pre:') ? 'pre:observe' : 'post:observe';
 
       assert.ok(command.includes(`node scripts/hooks/run-with-flags.js ${phase} scripts/hooks/observe-runner.js standard,strict`));
       assert.ok(!command.includes('shell scripts/hooks/run-with-flags-shell.sh'), `${hookId} should not use shell-mode bootstrap`);
-      assert.ok(!command.includes('skills/continuous-learning-v2/hooks/observe.sh'), `${hookId} should not call observe.sh directly from hooks.json`);
+      assert.ok(!command.includes('skills/continuous-learning-v2/hooks/observe.sh'), `${hookId} should not call observe.sh directly from the Claude hook graph`);
     }
   })) passed++; else failed++;
 
