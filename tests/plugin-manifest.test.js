@@ -353,7 +353,7 @@ test('codex plugin.json has interface.displayName', () => {
 
 test('codex plugin.json uses canonical Codex adaptation repo and display name', () => {
   assert.strictEqual(codexPlugin.repository, 'https://github.com/YBsmorom/ecc-codex-plugin');
-  assert.strictEqual(codexPlugin.interface.displayName, 'ECC for Codex (Unofficial)');
+  assert.strictEqual(codexPlugin.interface.displayName, 'ECC for Codex');
 });
 
 // ── .mcp.json at plugin root ──────────────────────────────────────────────────

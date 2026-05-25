@@ -1,10 +1,10 @@
-# ECC for Codex (Unofficial Adapter)
+# ECC for Codex
 
 [中文说明](README.zh-CN.md) | [Upstream ECC README](docs/upstream/README.affaan-m-ECC.md) | [Codex adaptation notes](CODEX-ADAPTATION.md)
 
 ![ECC - the harness-native operator system for agentic work](assets/hero.png)
 
-This repository is an unofficial Codex adapter fork of [affaan-m/ECC](https://github.com/affaan-m/ECC). It keeps the original ECC content intact and adds the Codex plugin metadata, routing skill, MCP duplicate policy, and installation notes needed for Codex to use ECC as a lazy-loaded plugin.
+This repository is a Codex adapter fork of [affaan-m/ECC](https://github.com/affaan-m/ECC). It keeps the original ECC content intact and adds the Codex plugin metadata, routing skill, MCP duplicate policy, and installation notes needed for Codex to use ECC as a lazy-loaded plugin.
 
 ECC itself is a harness-native operator system for agentic work: skills, rules, commands, MCP configs, security workflows, TDD workflows, review loops, and verification patterns. This adaptation makes that surface usable from Codex without assuming Claude Code slash commands, hooks, or agent names are available.
 
@@ -17,14 +17,14 @@ This is a practical packaging layer for Codex users:
 - a router-first way for Codex to select the smallest useful ECC skill/tool surface for each task;
 - a Codex-safe hook adapter that removes unsupported `async` declarations while preserving bounded hook behavior where possible.
 
-This is not the official ECC repository, not a rebrand, not a replacement for upstream ECC, and not true Claude Code background-async hook parity. Upstream ECC remains the source project; this fork focuses on Codex installation and runtime fit.
+Upstream ECC remains the source project. This fork focuses on Codex installation, routing, duplicate-tool policy, and runtime fit; it does not claim true Claude Code background-async hook parity.
 
 ## Install With Codex
 
 Give Codex this repository URL and ask it to install the plugin. Users should not need to clone this repository by hand:
 
 ```text
-Install the unofficial Codex plugin adapter from https://github.com/YBsmorom/ecc-codex-plugin.
+Install the ECC Codex plugin adapter from https://github.com/YBsmorom/ecc-codex-plugin.
 Use the repository root as the plugin root, validate .codex-plugin/plugin.json,
 enable it as a local/user plugin, and then show me how to use ecc-codex-orchestrator.
 ```
@@ -181,7 +181,7 @@ Original upstream:
 - Original README: [docs/upstream/README.affaan-m-ECC.md](docs/upstream/README.affaan-m-ECC.md)
 - Archived upstream GitHub Actions workflows: [docs/upstream/github-workflows/](docs/upstream/github-workflows/)
 
-This repository is an unofficial Codex adaptation and packaging layer. It is not the official upstream ECC repository.
+This repository is a Codex adaptation and packaging layer for the upstream ECC project.
 
 ## Verification
 

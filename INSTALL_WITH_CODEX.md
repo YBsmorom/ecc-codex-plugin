@@ -3,7 +3,7 @@
 Copy this prompt into Codex. The user-facing flow is intentionally just repo URL plus install instruction:
 
 ```text
-Install the unofficial Codex plugin adapter from https://github.com/YBsmorom/ecc-codex-plugin.
+Install the ECC Codex plugin adapter from https://github.com/YBsmorom/ecc-codex-plugin.
 Use the repository root as the plugin root, validate .codex-plugin/plugin.json,
 enable it as a local/user plugin, and then show me how to use ecc-codex-orchestrator.
 ```
@@ -20,7 +20,7 @@ Installer contract for Codex:
 中文：
 
 ```text
-请从 https://github.com/YBsmorom/ecc-codex-plugin 安装这个非官方 Codex 插件适配版。
+请从 https://github.com/YBsmorom/ecc-codex-plugin 安装这个 ECC Codex 插件适配版。
 把仓库根目录作为插件根目录，校验 .codex-plugin/plugin.json，
 注册并启用为本地/用户插件，然后告诉我如何使用 ecc-codex-orchestrator。
 ```

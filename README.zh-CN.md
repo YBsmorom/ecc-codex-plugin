@@ -1,10 +1,10 @@
-# ECC for Codex（非官方适配版）
+# ECC for Codex
 
 [English](README.md) | [上游 ECC README](docs/upstream/README.zh-CN.affaan-m-ECC.md) | [Codex 适配说明](CODEX-ADAPTATION.zh-CN.md)
 
 ![ECC - 面向智能体工作的 harness-native operator system](assets/hero.png)
 
-这个仓库是 [affaan-m/ECC](https://github.com/affaan-m/ECC) 的非官方 Codex 插件适配 fork。它保留原 ECC 内容，并补齐 Codex 插件元数据、路由技能、MCP 去重策略和安装说明，让 Codex 可以把 ECC 当作按任务懒加载的大型插件来使用。
+这个仓库是 [affaan-m/ECC](https://github.com/affaan-m/ECC) 的 Codex 插件适配 fork。它保留原 ECC 内容，并补齐 Codex 插件元数据、路由技能、MCP 去重策略和安装说明，让 Codex 可以把 ECC 当作按任务懒加载的大型插件来使用。
 
 ECC 本身是一套面向 agentic work 的 harness-native operator system，包含技能、规则、命令、MCP 配置、安全工作流、TDD 工作流、代码评审和验证模式。本适配版的重点是：让这些能力可以在 Codex 里使用，而不假设 Claude Code 的 slash command、hook 或 agent 名称一定存在。
 
@@ -17,14 +17,14 @@ ECC 本身是一套面向 agentic work 的 harness-native operator system，包�
 - 通过一个 Codex 路由入口，按任务选择最小够用的 ECC 技能和工具集合；
 - 把不被 Codex 当前支持的 `async` hook 声明移除，并尽量保留有界 hook 行为。
 
-这不是官方 ECC 仓库，不是重命名发布，也不是替代上游 ECC；它也不声称实现 Claude Code 后台 async hook 的完全同等能力。上游 ECC 仍然是源项目，本仓库只处理 Codex 安装、路由、去重和运行时适配。
+上游 ECC 仍然是源项目。本仓库聚焦 Codex 安装、路由、去重和运行时适配；它不声称实现 Claude Code 后台 async hook 的完全同等能力。
 
 ## 用 Codex 安装
 
 把下面这段话直接发给 Codex。使用者不需要手动 clone 仓库：
 
 ```text
-请从 https://github.com/YBsmorom/ecc-codex-plugin 安装这个非官方 Codex 插件适配版。
+请从 https://github.com/YBsmorom/ecc-codex-plugin 安装这个 ECC Codex 插件适配版。
 把仓库根目录作为插件根目录，校验 .codex-plugin/plugin.json，
 注册并启用为本地/用户插件，然后告诉我如何使用 ecc-codex-orchestrator。
 ```
@@ -117,7 +117,7 @@ Codex 不应该一次性加载完整 ECC 内容。路由器采用渐进披露：
 - 原中文 README：[docs/upstream/README.zh-CN.affaan-m-ECC.md](docs/upstream/README.zh-CN.affaan-m-ECC.md)
 - 已归档的上游 GitHub Actions 工作流：[docs/upstream/github-workflows/](docs/upstream/github-workflows/)
 
-这个仓库是非官方 Codex 适配和打包层，不是官方上游 ECC 仓库。
+这个仓库是面向上游 ECC 的 Codex 适配和打包层。
 
 ## 校验
 

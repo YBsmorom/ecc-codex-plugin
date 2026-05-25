@@ -1,6 +1,6 @@
-# .codex-plugin — Unofficial Codex Plugin Adapter for ECC
+# .codex-plugin — Codex Plugin Adapter for ECC
 
-This directory contains the **Codex plugin manifest** for this unofficial fork adapter of ECC.
+This directory contains the **Codex plugin manifest** for this fork adapter of ECC.
 
 ## Structure
 
@@ -19,10 +19,10 @@ This directory contains the **Codex plugin manifest** for this unofficial fork a
 ## Installation
 
 Normal user flow: give Codex the repository URL and ask it to install this
-unofficial adapter as a local/user plugin:
+adapter as a local/user plugin:
 
 ```text
-Install the unofficial Codex plugin adapter from https://github.com/YBsmorom/ecc-codex-plugin.
+Install the ECC Codex plugin adapter from https://github.com/YBsmorom/ecc-codex-plugin.
 Use the repository root as the plugin root, validate .codex-plugin/plugin.json,
 then enable it as a local/user plugin.
 ```

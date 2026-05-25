@@ -1,9 +1,9 @@
 {
   "name": "ecc",
   "version": "2.0.0-rc.1",
-  "description": "Unofficial Codex adapter fork of ECC: shared agent skills, a Codex orchestration router, MCP routing policy, TDD, security review, code review, and verification workflows.",
+  "description": "Codex adapter fork of ECC: shared agent skills, a Codex orchestration router, MCP routing policy, TDD, security review, code review, and verification workflows.",
   "author": {
-    "name": "Affaan Mustafa; unofficial Codex adaptation by YBsmorom",
+    "name": "Affaan Mustafa; Codex adaptation by YBsmorom",
     "email": "noreply@github.com",
     "url": "https://github.com/YBsmorom/ecc-codex-plugin"
   },
@@ -14,10 +14,10 @@
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "ECC for Codex (Unofficial)",
-    "shortDescription": "Unofficial ECC fork with Codex routing and MCP policy for TDD, security, code review, and autonomous development.",
-    "longDescription": "This unofficial fork packages ECC for Codex. It preserves the original MIT-licensed ECC surface while adding a Codex-facing orchestration router, generated skill index, routing map, MCP duplicate policy, and install documentation so Codex can lazily select the right ECC skills, scripts, docs, and MCP servers for each task.",
-    "developerName": "Affaan Mustafa; unofficial Codex adaptation by YBsmorom",
+    "displayName": "ECC for Codex",
+    "shortDescription": "ECC fork with Codex routing and MCP policy for TDD, security, code review, and autonomous development.",
+    "longDescription": "This fork packages ECC for Codex. It preserves the original MIT-licensed ECC surface while adding a Codex-facing orchestration router, generated skill index, routing map, MCP duplicate policy, and install documentation so Codex can lazily select the right ECC skills, scripts, docs, and MCP servers for each task.",
+    "developerName": "Affaan Mustafa; Codex adaptation by YBsmorom",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
     "websiteURL": "https://github.com/YBsmorom/ecc-codex-plugin",

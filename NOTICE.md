@@ -1,6 +1,6 @@
 # Notice
 
-This repository is an unofficial Codex adaptation fork and packaging layer for ECC.
+This repository is a Codex adaptation fork and packaging layer for ECC.
 
 ## Upstream ECC
 
@@ -36,4 +36,4 @@ Codex-specific adaptation work in this repository includes:
 - Codex-safe hook graph under `hooks/hooks.json` with unsupported `async` declarations removed
 - Codex-oriented installation and adaptation documentation in English and Chinese
 
-This repository is not the official upstream ECC repository. It is an unofficial public Codex plugin packaging of ECC for users who want to install ECC by giving a repository URL to Codex.
+This repository is a public Codex plugin packaging of ECC for users who want to install ECC by giving a repository URL to Codex.
