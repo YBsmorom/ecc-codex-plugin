@@ -12,19 +12,28 @@ This directory contains the **Codex plugin manifest** for this unofficial fork a
 
 ## What This Provides
 
-- **200 skills** from `./skills/` — reusable Codex workflows for TDD, security,
+- **233 skills** from `./skills/` — reusable Codex workflows for TDD, security,
   code review, architecture, and more
 - **6 MCP servers** — GitHub, Context7, Exa, Memory, Playwright, Sequential Thinking
 
 ## Installation
 
-Codex plugin support is currently marketplace-backed. The repo exposes a
-repo-scoped marketplace at `.agents/plugins/marketplace.json`; Codex can add and
-track that marketplace source from the CLI:
+Normal user flow: give Codex the repository URL and ask it to install this
+unofficial adapter as a local/user plugin:
+
+```text
+Install the unofficial Codex plugin adapter from https://github.com/YBsmorom/ecc-codex-plugin.
+Use the repository root as the plugin root, validate .codex-plugin/plugin.json,
+then enable it as a local/user plugin.
+```
+
+For current CLI marketplace workflows, the repo also exposes a repo-scoped
+marketplace at `.agents/plugins/marketplace.json`; Codex can add and track that
+marketplace source from the CLI:
 
 ```bash
 # Add the public repo marketplace
-codex plugin marketplace add YBsmorom/ecc-codex-plugin
+codex plugin marketplace add https://github.com/YBsmorom/ecc-codex-plugin
 
 # Or add a local checkout while developing
 codex plugin marketplace add /absolute/path/to/ecc-codex-plugin
@@ -37,8 +46,8 @@ plugin directory.
 
 Official Plugin Directory publishing is coming soon in Codex. Until self-serve
 publishing exists, treat the public repo marketplace as the supported Codex
-distribution path and keep release copy framed as repo-marketplace/manual
-installation.
+distribution path and keep release copy framed as repository URL,
+repo-marketplace, or manual local installation.
 
 The installed plugin registers under the short slug `ecc` so tool and command names
 stay below provider length limits.

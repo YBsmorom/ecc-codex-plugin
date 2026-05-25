@@ -32,7 +32,8 @@ Codex-specific adaptation work in this repository includes:
 - `.codex-plugin/plugin.json`
 - `skills/ecc-codex-orchestrator/`
 - generated routing references under `skills/ecc-codex-orchestrator/references/`
-- Codex-oriented installation and adaptation documentation
 - MCP duplicate routing policy for Codex environments
+- Codex-safe hook graph under `hooks/hooks.json` with unsupported `async` declarations removed
+- Codex-oriented installation and adaptation documentation in English and Chinese
 
 This repository is not the official upstream ECC repository. It is an unofficial public Codex plugin packaging of ECC for users who want to install ECC by giving a repository URL to Codex.

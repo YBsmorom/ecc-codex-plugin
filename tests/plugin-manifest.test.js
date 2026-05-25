@@ -476,9 +476,14 @@ test('.opencode/package-lock.json root version matches package.json', () => {
 
 test('README version row matches package.json', () => {
   const readme = fs.readFileSync(path.join(repoRoot, 'README.md'), 'utf8');
-  const match = readme.match(new RegExp(`^\\| \\*\\*Version\\*\\* \\| Plugin \\| Plugin \\| Reference config \\| (${semverPattern}) \\|(?: Instruction layer \\|)?$`, 'm'));
-  assert.ok(match, 'Expected README version summary row');
-  assert.strictEqual(match[1], expectedVersion);
+  assert.ok(
+    readme.includes(`### v${expectedVersion}`),
+    'Expected README version heading to match package.json',
+  );
+  assert.ok(
+    readme.includes('| Codex plugin manifest | Present |'),
+    'Expected README version section to describe the Codex plugin manifest status',
+  );
 });
 
 test('user-facing docs do not use overlong legacy marketplace install commands', () => {
@@ -533,8 +538,8 @@ test('.codex-plugin README uses current marketplace add flow', () => {
     'Expected .codex-plugin README to document codex plugin marketplace add',
   );
   assert.ok(
-    readme.includes('codex plugin marketplace add YBsmorom/ecc-codex-plugin'),
-    'Expected .codex-plugin README to document the canonical Codex adaptation repo marketplace source',
+    readme.includes('codex plugin marketplace add https://github.com/YBsmorom/ecc-codex-plugin'),
+    'Expected .codex-plugin README to document the canonical Codex adaptation repo marketplace URL',
   );
   assert.ok(
     readme.includes('Official Plugin Directory publishing is coming soon'),

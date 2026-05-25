@@ -1,4 +1,4 @@
-# ECC for Codex（非官方 Fork）
+# ECC for Codex（非官方适配版）
 
 [English](README.md) | [上游 ECC README](docs/upstream/README.zh-CN.affaan-m-ECC.md) | [Codex 适配说明](CODEX-ADAPTATION.zh-CN.md)
 
@@ -7,6 +7,17 @@
 这个仓库是 [affaan-m/ECC](https://github.com/affaan-m/ECC) 的非官方 Codex 插件适配 fork。它保留原 ECC 内容，并补齐 Codex 插件元数据、路由技能、MCP 去重策略和安装说明，让 Codex 可以把 ECC 当作按任务懒加载的大型插件来使用。
 
 ECC 本身是一套面向 agentic work 的 harness-native operator system，包含技能、规则、命令、MCP 配置、安全工作流、TDD 工作流、代码评审和验证模式。本适配版的重点是：让这些能力可以在 Codex 里使用，而不假设 Claude Code 的 slash command、hook 或 agent 名称一定存在。
+
+## 这是什么
+
+这是给 Codex 使用者准备的实际打包层：
+
+- 保留上游 ECC 署名和 MIT 协议边界；
+- 让使用者可以把仓库 URL 交给 Codex 来安装插件；
+- 通过一个 Codex 路由入口，按任务选择最小够用的 ECC 技能和工具集合；
+- 把不被 Codex 当前支持的 `async` hook 声明移除，并尽量保留有界 hook 行为。
+
+这不是官方 ECC 仓库，不是重命名发布，也不是替代上游 ECC；它也不声称实现 Claude Code 后台 async hook 的完全同等能力。上游 ECC 仍然是源项目，本仓库只处理 Codex 安装、路由、去重和运行时适配。
 
 ## 用 Codex 安装
 
@@ -37,21 +48,37 @@ git clone https://github.com/YBsmorom/ecc-codex-plugin.git
 
 ## 本适配版新增了什么
 
-- `.codex-plugin/plugin.json`：Codex 插件发现和 UI 元数据。
-- `skills/ecc-codex-orchestrator/`：面向 Codex 的 ECC 路由技能。
-- `skills/ecc-codex-orchestrator/references/skill-index.json`：ECC 技能生成索引。
-- `skills/ecc-codex-orchestrator/references/routing-map.json`：任务分类、候选技能和伴随验证规则。
-- `skills/ecc-codex-orchestrator/references/mcp-routing-policy.md`：Codex 环境下的 MCP/工具重复处理策略。
-- `hooks/hooks.json`：从保留的 Claude Code hooks 生成的 Codex-safe hook 图，不包含 `async` 声明；原 async 条目会适配为有界的 Codex hook 条目。
-- `.mcp.json`：GitHub、Context7、Exa、Memory、Playwright、Sequential Thinking 的便携 MCP 配置。
-- 中英文安装和适配说明。
+| 新增表面 | 为什么需要 | 相比上游 ECC 的变化 |
+| --- | --- | --- |
+| `.codex-plugin/plugin.json` | 让 Codex 能把仓库识别为插件。 | 上游 ECC 不是以这个 fork 的 Codex 仓库 URL 安装流为主。 |
+| `skills/ecc-codex-orchestrator/` | 给 Codex 一个统一路由入口，而不是直接加载完整 ECC。 | 上游技能保持不动；这里增加 Codex 选择器。 |
+| `skill-index.json` 和 `routing-map.json` | 让 233 个技能先通过轻量元数据被检索。 | 避免一开始把全部技能正文塞进上下文。 |
+| `mcp-routing-policy.md` | 处理 ECC MCP 与 Codex 原生工具、官方插件的重复。 | 默认选择更原生、更少重复、证据更清楚的工具。 |
+| `hooks/hooks.json` | 提供不含 `async` 声明的 Codex-safe hook 图。 | 保留 Claude 源 hook 图作参考，并把原 async 条目适配为有界 Codex hook。 |
+| 中英文文档 | 说明安装方式、边界、署名、校验和路由策略。 | 增加 Codex 使用者需要的说明，不删除上游文档。 |
+
+## 为什么要做这个 fork
+
+ECC 很有用，但体量不小。如果直接整包塞给 Codex，会造成上下文噪音、工具重复和路由不稳定。本适配版把集成策略显式化：
+
+1. Codex 先从 `ecc-codex-orchestrator` 进入。
+2. 路由器先读小索引，再按需打开技能正文。
+3. 当 ECC MCP 和 Codex 原生工具或官方插件重叠时，优先使用更原生、更少重复的工具。
+4. 高风险任务可以自动搭配验证、安全评审或代码评审技能。
+5. hook 使用 Codex 当前支持的生命周期，不再触发 unsupported async hook 警告。
 
 ## 版本和兼容性
 
 ### v2.0.0-rc.1 Codex 适配版
 
-| **版本** | 插件 | 插件 | 参考配置 | 2.0.0-rc.1 |
-| --- | --- | --- | --- | --- |
+| 表面 | 本 fork 当前状态 |
+| --- | --- |
+| Codex 插件 manifest | 已提供 |
+| 技能路由器 | `ecc-codex-orchestrator` |
+| MCP 配置 | 可选参考配置，并带重复工具选择策略 |
+| Hooks | 28 个 Codex-safe matcher，不含 `async` 声明 |
+| Claude Code 资产 | 作为上游/参考材料保留 |
+| npm package identity | 保留上游包身份，但在本 fork 中标记为 private；Codex 使用者应通过仓库 URL 安装，而不是把本 fork 当成新的 npm 包 |
 
 Codex 安装本适配版时使用 `https://github.com/YBsmorom/ecc-codex-plugin`。上游 Claude Code marketplace 安装使用短标识 `ecc@ecc`；如果已经通过 `/plugin install ecc@ecc` 安装上游 ECC，之后不要再运行 `--profile full` 完整安装器。
 

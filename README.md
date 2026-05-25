@@ -1,4 +1,4 @@
-# ECC for Codex (Unofficial Fork)
+# ECC for Codex (Unofficial Adapter)
 
 [中文说明](README.zh-CN.md) | [Upstream ECC README](docs/upstream/README.affaan-m-ECC.md) | [Codex adaptation notes](CODEX-ADAPTATION.md)
 
@@ -7,6 +7,17 @@
 This repository is an unofficial Codex adapter fork of [affaan-m/ECC](https://github.com/affaan-m/ECC). It keeps the original ECC content intact and adds the Codex plugin metadata, routing skill, MCP duplicate policy, and installation notes needed for Codex to use ECC as a lazy-loaded plugin.
 
 ECC itself is a harness-native operator system for agentic work: skills, rules, commands, MCP configs, security workflows, TDD workflows, review loops, and verification patterns. This adaptation makes that surface usable from Codex without assuming Claude Code slash commands, hooks, or agent names are available.
+
+## What This Is
+
+This is a practical packaging layer for Codex users:
+
+- an MIT-licensed fork that preserves upstream ECC attribution;
+- a Codex plugin surface that can be installed from a repository URL;
+- a router-first way for Codex to select the smallest useful ECC skill/tool surface for each task;
+- a Codex-safe hook adapter that removes unsupported `async` declarations while preserving bounded hook behavior where possible.
+
+This is not the official ECC repository, not a rebrand, not a replacement for upstream ECC, and not true Claude Code background-async hook parity. Upstream ECC remains the source project; this fork focuses on Codex installation and runtime fit.
 
 ## Install With Codex
 
@@ -101,21 +112,37 @@ ECC only removes files recorded in its install-state. If you installed through t
 
 ## What This Adaptation Adds
 
-- `.codex-plugin/plugin.json` for Codex plugin discovery and UI metadata.
-- `skills/ecc-codex-orchestrator/` as the Codex-facing router.
-- `skills/ecc-codex-orchestrator/references/skill-index.json`, a generated index of ECC skills.
-- `skills/ecc-codex-orchestrator/references/routing-map.json`, task classification and companion-skill rules.
-- `skills/ecc-codex-orchestrator/references/mcp-routing-policy.md`, duplicate MCP/tool handling for Codex.
-- `hooks/hooks.json`, a Codex-safe hook graph generated from the preserved Claude Code hooks without `async` declarations; former async entries are adapted into bounded Codex hook entries.
-- `.mcp.json` with portable MCP server definitions for GitHub, Context7, Exa, Memory, Playwright, and Sequential Thinking.
-- Bilingual installation and adaptation documentation.
+| Added surface | Why it exists | Compared with upstream ECC |
+| --- | --- | --- |
+| `.codex-plugin/plugin.json` | Lets Codex discover this repository as a plugin. | Upstream ECC is not packaged primarily as this fork's Codex repo-URL adapter. |
+| `skills/ecc-codex-orchestrator/` | Gives Codex one routing entrypoint instead of loading the whole ECC surface. | Upstream skills remain intact; this adds a Codex-facing selector. |
+| `skill-index.json` and `routing-map.json` | Keeps 233 skills searchable through lightweight metadata. | Avoids dumping every skill body into context up front. |
+| `mcp-routing-policy.md` | Handles overlap between ECC MCP servers and Codex-native or official plugins. | Prefers the most native, least duplicative tool for each task. |
+| `hooks/hooks.json` | Provides a Codex-safe hook graph with no `async` declarations. | Preserves the Claude source hook graph separately and adapts former async entries into bounded Codex hook entries. |
+| Bilingual docs | Makes install, boundaries, attribution, and validation clear in English and Chinese. | Adds Codex-specific onboarding without removing upstream documentation. |
+
+## Why This Fork Exists
+
+ECC is useful, but it is large. A direct all-at-once import into Codex would be noisy, expensive in context, and likely to route poorly. This fork makes the integration explicit:
+
+1. Codex starts from one orchestration skill.
+2. The router reads small indexes before opening skill bodies.
+3. Native Codex tools and official plugins win when they overlap with ECC MCP servers.
+4. Risky work can add verification, security, or review companions.
+5. Hooks use the Codex-supported lifecycle instead of unsupported async declarations.
 
 ## Version And Compatibility
 
 ### v2.0.0-rc.1
 
-| **Version** | Plugin | Plugin | Reference config | 2.0.0-rc.1 | Instruction layer |
-| --- | --- | --- | --- | --- | --- |
+| Surface | Status in this fork |
+| --- | --- |
+| Codex plugin manifest | Present |
+| Skill router | `ecc-codex-orchestrator` |
+| MCP config | Optional reference config with duplicate-routing policy |
+| Hooks | Codex-safe graph with 28 matchers and no `async` declarations |
+| Claude Code assets | Preserved as upstream/reference material |
+| npm package identity | Preserved but marked private in this fork; Codex users should install from the repository URL, not treat this fork as a new npm package |
 
 Codex installs this adaptation from `https://github.com/YBsmorom/ecc-codex-plugin`. Upstream Claude Code marketplace installs use the short identifier `ecc@ecc`; if you install upstream ECC with `/plugin install ecc@ecc`, do not run the full installer afterwards with `--profile full`.
 
@@ -194,4 +221,4 @@ Harness parity:
 | --- | ---: | --- | --- | ---: |
 | Agents | 60 | Shared (AGENTS.md) | Shared (AGENTS.md) | 12 |
 | Commands | 75 | Shared | Instruction-based | 75 |
-| Skills | 233 | Shared | 10 (native format) | 37 |
+| Skills | 233 | Shared | Routed through ecc-codex-orchestrator | 37 |

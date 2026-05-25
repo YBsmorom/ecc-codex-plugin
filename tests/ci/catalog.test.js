@@ -42,6 +42,7 @@ function writeEnglishReadme(root, counts, options = {}) {
   const tableCounts = options.tableCounts || counts;
   const parityCounts = options.parityCounts || counts;
   const unrelatedSkillsCount = options.unrelatedSkillsCount || 16;
+  const codexSkillsParity = options.codexSkillsParity || '10 (native format)';
 
   fs.writeFileSync(path.join(root, 'README.md'), `Access to ${counts.agents} agents, ${counts.skills} skills, and ${counts.commands} commands.
 - **Public surface synced to the live repo** - metadata, catalog counts, plugin manifests, and install-facing docs now match the actual OSS surface: ${counts.agents} agents, ${counts.skills} skills, and ${counts.commands} legacy command shims.
@@ -62,7 +63,7 @@ function writeEnglishReadme(root, counts, options = {}) {
 | --- | --- | --- | --- | --- |
 | **Agents** | ${parityCounts.agents} | Shared (AGENTS.md) | Shared (AGENTS.md) | 12 |
 | **Commands** | ${parityCounts.commands} | Shared | Instruction-based | 31 |
-| **Skills** | ${parityCounts.skills} | Shared | 10 (native format) | 37 |
+| **Skills** | ${parityCounts.skills} | Shared | ${codexSkillsParity} | 37 |
 `);
 }
 
@@ -267,6 +268,25 @@ function runTests() {
       assert.ok(zhAgentsDoc.includes('skills/ - 1+ 个工作流技能和领域知识'));
       assert.ok(pluginJson.includes('1 agents, 1 skills, 1 legacy command shims'));
       assert.ok(marketplaceJson.includes('1 agents, 1 skills, 1 legacy command shims'));
+    } finally {
+      cleanupTestDir(testDir);
+    }
+  })) passed++; else failed++;
+
+  if (test('accepts Codex router wording in README parity table', () => {
+    const testDir = createTestDir();
+    try {
+      writeCatalogFixture(testDir, {
+        actualCounts: { agents: 2, skills: 3, commands: 4 },
+        documentedCounts: { agents: 2, skills: 3, commands: 4 },
+      });
+      writeEnglishReadme(testDir, { agents: 2, skills: 3, commands: 4 }, {
+        codexSkillsParity: 'Routed through ecc-codex-orchestrator',
+      });
+
+      const result = runCatalogCheck({ root: testDir });
+
+      assert.strictEqual(result.checks.filter(check => !check.ok).length, 0);
     } finally {
       cleanupTestDir(testDir);
     }

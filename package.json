@@ -1,10 +1,8 @@
 {
   "name": "ecc-universal",
   "version": "2.0.0-rc.1",
-  "description": "Harness-native agent operating system for Claude Code, Codex, OpenCode, Cursor, Gemini, and terminal workflows - skills, hooks, rules, MCP conventions, and operator control-plane patterns",
-  "publishConfig": {
-    "access": "public"
-  },
+  "private": true,
+  "description": "Unofficial Codex adapter fork of ECC with lazy skill routing, MCP duplicate policy, Codex-safe hooks, and preserved upstream MIT attribution",
   "keywords": [
     "claude-code",
     "ai",
@@ -34,11 +32,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/affaan-m/ECC.git"
+    "url": "git+https://github.com/YBsmorom/ecc-codex-plugin.git"
   },
-  "homepage": "https://github.com/affaan-m/ECC#readme",
+  "homepage": "https://github.com/YBsmorom/ecc-codex-plugin#readme",
   "bugs": {
-    "url": "https://github.com/affaan-m/ECC/issues"
+    "url": "https://github.com/YBsmorom/ecc-codex-plugin/issues"
   },
   "files": [
     ".agents/",
@@ -301,7 +299,7 @@
     "ecc-install": "scripts/install-apply.js"
   },
   "scripts": {
-    "postinstall": "echo '\\n  ecc-universal installed!\\n  Run: npx ecc typescript\\n  Compat: npx ecc-install typescript\\n  Docs: https://github.com/affaan-m/ECC\\n'",
+    "postinstall": "echo '\\n  ecc-universal installed!\\n  Run: npx ecc typescript\\n  Compat: npx ecc-install typescript\\n  Codex adapter docs: https://github.com/YBsmorom/ecc-codex-plugin\\n  Upstream ECC: https://github.com/affaan-m/ECC\\n'",
     "catalog:check": "node scripts/ci/catalog.js --text",
     "catalog:sync": "node scripts/ci/catalog.js --write --text",
     "command-registry:generate": "node scripts/ci/generate-command-registry.js",

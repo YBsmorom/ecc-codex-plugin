@@ -159,7 +159,7 @@ function parseReadmeExpectations(readmeContent) {
     },
     {
       category: 'skills',
-      regex: /^\|\s*(?:\*\*)?Skills(?:\*\*)?\s*\|\s*(\d+)\s*\|\s*Shared\s*\|\s*10\s*\(native format\)\s*\|\s*37\s*\|(?:\s*Via instructions\s*\|)?$/im,
+      regex: /^\|\s*(?:\*\*)?Skills(?:\*\*)?\s*\|\s*(\d+)\s*\|\s*Shared\s*\|\s*(?:10\s*\(native format\)|Routed through ecc-codex-orchestrator)\s*\|\s*37\s*\|(?:\s*Via instructions\s*\|)?$/im,
       source: 'README.md parity table'
     }
   ];
