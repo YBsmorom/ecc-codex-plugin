@@ -1,6 +1,6 @@
-# .codex-plugin — Codex Native Plugin for ECC
+# .codex-plugin — Unofficial Codex Plugin Adapter for ECC
 
-This directory contains the **Codex plugin manifest** for ECC.
+This directory contains the **Codex plugin manifest** for this unofficial fork adapter of ECC.
 
 ## Structure
 
@@ -24,10 +24,10 @@ track that marketplace source from the CLI:
 
 ```bash
 # Add the public repo marketplace
-codex plugin marketplace add affaan-m/ECC
+codex plugin marketplace add YBsmorom/ecc-codex-plugin
 
 # Or add a local checkout while developing
-codex plugin marketplace add /absolute/path/to/ECC
+codex plugin marketplace add /absolute/path/to/ecc-codex-plugin
 ```
 
 The marketplace entry points at the repository root so `.codex-plugin/plugin.json`,

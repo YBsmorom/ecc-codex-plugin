@@ -1,0 +1,152 @@
+{
+  "version": "2026-05-25",
+  "purpose": "Codex-facing routing rules for the ECC plugin. Use with skill-index.json; do not load all skills eagerly.",
+  "candidate_policy": {
+    "simple": {
+      "target_candidates": 3,
+      "read_skill_bodies": 1,
+      "notes": "Use direct match when the task is narrow and low risk."
+    },
+    "serial": {
+      "target_candidates": 5,
+      "read_skill_bodies": 2,
+      "notes": "Keep the critical path in the main agent and add companions only when they reduce risk."
+    },
+    "parallel": {
+      "target_candidates": 8,
+      "read_skill_bodies": 3,
+      "notes": "Map independent domains first; use Codex subagents only when explicitly authorized by the user or active instructions."
+    },
+    "broad-context": {
+      "target_candidates": 10,
+      "read_skill_bodies": 4,
+      "notes": "Prefer evidence-gathering and audit skills before implementation."
+    },
+    "high-risk": {
+      "target_candidates": 12,
+      "read_skill_bodies": 4,
+      "required_companions": ["verification-loop"],
+      "notes": "Add independent review, security, or regression checks before finalizing."
+    }
+  },
+  "domain_routes": [
+    {
+      "domain": "implementation",
+      "triggers": ["build", "implement", "add", "fix", "bug", "refactor", "feature", "port"],
+      "primary": ["tdd-workflow"],
+      "companions": ["verification-loop", "ai-regression-testing"],
+      "risk_additions": {
+        "security": ["security-review"],
+        "frontend": ["browser-qa", "e2e-testing"],
+        "database": ["database-migrations", "postgres-patterns"]
+      }
+    },
+    {
+      "domain": "security",
+      "triggers": ["auth", "secret", "token", "credential", "oauth", "payment", "pii", "phi", "owasp", "xss", "csrf", "injection"],
+      "primary": ["security-review"],
+      "companions": ["security-scan", "verification-loop"],
+      "required": true
+    },
+    {
+      "domain": "research",
+      "triggers": ["research", "latest", "current", "compare", "find", "evidence", "sources", "docs", "library"],
+      "primary": ["search-first"],
+      "companions": ["iterative-retrieval", "deep-research"],
+      "tool_preferences": ["context7", "exa", "github"]
+    },
+    {
+      "domain": "frontend",
+      "triggers": ["ui", "frontend", "browser", "react", "vue", "angular", "css", "visual", "responsive", "screenshot"],
+      "primary": ["frontend-design-direction", "frontend-patterns"],
+      "companions": ["browser-qa", "e2e-testing", "accessibility"],
+      "tool_preferences": ["browser-plugin", "playwright"]
+    },
+    {
+      "domain": "planning",
+      "triggers": ["plan", "roadmap", "architecture", "decompose", "orchestrate", "workflow", "multi-agent"],
+      "primary": ["agentic-engineering", "plan-orchestrate"],
+      "companions": ["architecture-decision-records", "verification-loop"]
+    },
+    {
+      "domain": "capability-audit",
+      "triggers": ["what can this do", "available", "audit", "setup", "missing", "plugin", "mcp", "capability"],
+      "primary": ["workspace-surface-audit"],
+      "companions": ["automation-audit-ops", "skill-scout"]
+    },
+    {
+      "domain": "content",
+      "triggers": ["article", "copy", "email", "social", "slides", "brand", "script", "content"],
+      "primary": ["article-writing", "content-engine"],
+      "companions": ["brand-voice", "market-research"]
+    },
+    {
+      "domain": "business-ops",
+      "triggers": ["billing", "crm", "inventory", "logistics", "procurement", "returns", "quality", "nonconformance"],
+      "primary": ["workspace-surface-audit"],
+      "companions": ["market-research", "automation-audit-ops"]
+    }
+  ],
+  "framework_routes": [
+    {
+      "trigger": ["django", "drf", "pytest-django"],
+      "primary": ["django-patterns"],
+      "companions": ["django-security", "django-tdd", "django-verification"]
+    },
+    {
+      "trigger": ["laravel", "php artisan", "eloquent", "pest"],
+      "primary": ["laravel-patterns"],
+      "companions": ["laravel-security", "laravel-tdd", "laravel-verification"]
+    },
+    {
+      "trigger": ["spring boot", "springboot", "spring security", "junit"],
+      "primary": ["springboot-patterns"],
+      "companions": ["springboot-security", "springboot-tdd", "springboot-verification"]
+    },
+    {
+      "trigger": ["quarkus", "panache", "camel", "resteasy"],
+      "primary": ["quarkus-patterns"],
+      "companions": ["quarkus-security", "quarkus-tdd", "quarkus-verification"]
+    },
+    {
+      "trigger": ["react", "next.js", "nextjs", "vite", "frontend"],
+      "primary": ["frontend-patterns", "frontend-design-direction"],
+      "companions": ["browser-qa", "e2e-testing", "accessibility"]
+    },
+    {
+      "trigger": ["python", "pytest", "fastapi"],
+      "primary": ["python-patterns"],
+      "companions": ["python-testing", "fastapi-patterns", "verification-loop"]
+    },
+    {
+      "trigger": ["go", "golang"],
+      "primary": ["golang-patterns"],
+      "companions": ["golang-testing", "verification-loop"]
+    },
+    {
+      "trigger": ["rust", "cargo", "borrow checker"],
+      "primary": ["rust-patterns"],
+      "companions": ["rust-testing", "verification-loop"]
+    }
+  ],
+  "selection_scoring": [
+    "Exact framework_routes trigger beats generic keyword overlap.",
+    "Exact skill id/name match beats description-only match.",
+    "Risk additions are mandatory companions, not optional alternatives.",
+    "Description matches inside DO NOT TRIGGER or negative examples must not increase rank.",
+    "If top candidates disagree by domain, read frontmatter for all plausible domains before choosing."
+  ],
+  "always_consider": {
+    "implementation": ["verification-loop"],
+    "auth_or_secrets": ["security-review"],
+    "ui_or_browser": ["browser-qa"],
+    "current_docs": ["search-first"],
+    "large_or_ambiguous": ["workspace-surface-audit", "agentic-engineering"]
+  },
+  "stop_rules": [
+    "Do not execute scripts before reading them.",
+    "Do not assume Claude Code slash commands, agents, or hooks exist in Codex.",
+    "Do not enable duplicate MCP servers when an official plugin or already-active tool provides the same capability.",
+    "Do not write credentials into prompts, events, logs, artifacts, MCP config, or generated files."
+  ]
+}

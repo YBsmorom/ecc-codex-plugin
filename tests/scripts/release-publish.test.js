@@ -22,7 +22,13 @@ function test(name, fn) {
 }
 
 function load(relativePath) {
-  return fs.readFileSync(path.join(repoRoot, relativePath), 'utf8').replace(/\r\n/g, '\n');
+  const directPath = path.join(repoRoot, relativePath);
+  const archivedPath = relativePath.startsWith('.github/workflows/')
+    ? path.join(repoRoot, 'docs', 'upstream', 'github-workflows', path.basename(relativePath))
+    : null;
+  const resolvedPath = fs.existsSync(directPath) ? directPath : archivedPath;
+
+  return fs.readFileSync(resolvedPath, 'utf8').replace(/\r\n/g, '\n');
 }
 
 console.log('\n=== Testing release publish workflow ===\n');

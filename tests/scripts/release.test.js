@@ -8,16 +8,15 @@ const path = require('path');
 
 const scriptPath = path.join(__dirname, '..', '..', 'scripts', 'release.sh');
 const source = fs.readFileSync(scriptPath, 'utf8');
-const releaseWorkflowPath = path.join(__dirname, '..', '..', '.github', 'workflows', 'release.yml');
-const reusableReleaseWorkflowPath = path.join(
-  __dirname,
-  '..',
-  '..',
-  '.github',
-  'workflows',
-  'reusable-release.yml'
-);
-const ciWorkflowPath = path.join(__dirname, '..', '..', '.github', 'workflows', 'ci.yml');
+function resolveWorkflowPath(fileName) {
+  const activePath = path.join(__dirname, '..', '..', '.github', 'workflows', fileName);
+  const archivedPath = path.join(__dirname, '..', '..', 'docs', 'upstream', 'github-workflows', fileName);
+  return fs.existsSync(activePath) ? activePath : archivedPath;
+}
+
+const releaseWorkflowPath = resolveWorkflowPath('release.yml');
+const reusableReleaseWorkflowPath = resolveWorkflowPath('reusable-release.yml');
+const ciWorkflowPath = resolveWorkflowPath('ci.yml');
 const releaseWorkflowSource = fs.readFileSync(releaseWorkflowPath, 'utf8');
 const reusableReleaseWorkflowSource = fs.readFileSync(reusableReleaseWorkflowPath, 'utf8');
 const ciWorkflowSource = fs.readFileSync(ciWorkflowPath, 'utf8');

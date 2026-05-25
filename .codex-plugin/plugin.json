@@ -1,28 +1,32 @@
 {
   "name": "ecc",
   "version": "2.0.0-rc.1",
-  "description": "Harness-native ECC workflows for Codex: shared skills, production-ready MCP configs, and selective-install-aligned conventions for TDD, security scanning, code review, and autonomous development.",
+  "description": "Unofficial Codex adapter fork of ECC: shared agent skills, a Codex orchestration router, MCP routing policy, TDD, security review, code review, and verification workflows.",
   "author": {
-    "name": "Affaan Mustafa",
-    "email": "me@affaanmustafa.com",
-    "url": "https://x.com/affaanmustafa"
+    "name": "Affaan Mustafa; unofficial Codex adaptation by YBsmorom",
+    "email": "noreply@github.com",
+    "url": "https://github.com/YBsmorom/ecc-codex-plugin"
   },
-  "homepage": "https://ecc.tools",
-  "repository": "https://github.com/affaan-m/ECC",
+  "homepage": "https://github.com/YBsmorom/ecc-codex-plugin",
+  "repository": "https://github.com/YBsmorom/ecc-codex-plugin",
   "license": "MIT",
   "keywords": ["codex", "agents", "skills", "tdd", "code-review", "security", "workflow", "automation"],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
-    "displayName": "ECC",
-    "shortDescription": "207 battle-tested ECC skills plus MCP configs for TDD, security, code review, and autonomous development.",
-    "longDescription": "ECC is a harness-native operator system for Codex and adjacent agent harnesses. It packages reusable skills, MCP configs, TDD workflows, security scanning, code review, architecture decisions, operator workflows, and release gates in one installable plugin.",
-    "developerName": "Affaan Mustafa",
+    "displayName": "ECC for Codex (Unofficial)",
+    "shortDescription": "Unofficial ECC fork with Codex routing and MCP policy for TDD, security, code review, and autonomous development.",
+    "longDescription": "This unofficial fork packages ECC for Codex. It preserves the original MIT-licensed ECC surface while adding a Codex-facing orchestration router, generated skill index, routing map, MCP duplicate policy, and install documentation so Codex can lazily select the right ECC skills, scripts, docs, and MCP servers for each task.",
+    "developerName": "Affaan Mustafa; unofficial Codex adaptation by YBsmorom",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],
-    "websiteURL": "https://ecc.tools",
+    "websiteURL": "https://github.com/YBsmorom/ecc-codex-plugin",
+    "brandColor": "#22C55E",
+    "composerIcon": "./assets/images/ecc-logo.png",
+    "logo": "./assets/images/ecc-logo.png",
+    "screenshots": ["./assets/hero.png"],
     "defaultPrompt": [
-      "Use the tdd-workflow skill to write tests before implementation.",
+      "Use ecc-codex-orchestrator to route this task through the right ECC surfaces.",
       "Use the security-review skill to scan for OWASP Top 10 vulnerabilities.",
       "Use the verification-loop skill to verify correctness before shipping changes."
     ]

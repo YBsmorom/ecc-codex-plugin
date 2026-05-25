@@ -138,7 +138,6 @@ async function run() {
         outputPath,
       ], {
         encoding: 'utf8',
-        shell: process.platform === 'win32',
       });
 
       assert.strictEqual(result.status, 0, result.stderr);
@@ -189,7 +188,6 @@ async function run() {
   if (await test('CLI text output and invalid flag errors are stable', async () => {
     const help = spawnSync('node', [SCRIPT_PATH, '--help'], {
       encoding: 'utf8',
-      shell: process.platform === 'win32',
     });
     assert.strictEqual(help.status, 0);
     assert.match(help.stdout, /--strict-refresh/);
@@ -200,7 +198,6 @@ async function run() {
       '2026-05-16T00:00:00.000Z',
     ], {
       encoding: 'utf8',
-      shell: process.platform === 'win32',
     });
     assert.strictEqual(text.status, 0, text.stderr);
     assert.match(text.stdout, /Supply-chain advisory sources: ready/);
@@ -208,7 +205,6 @@ async function run() {
 
     const invalid = spawnSync('node', [SCRIPT_PATH, '--unknown'], {
       encoding: 'utf8',
-      shell: process.platform === 'win32',
     });
     assert.strictEqual(invalid.status, 2);
     assert.match(invalid.stderr, /Unknown argument/);

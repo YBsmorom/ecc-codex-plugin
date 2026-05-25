@@ -351,9 +351,9 @@ test('codex plugin.json has interface.displayName', () => {
   );
 });
 
-test('codex plugin.json uses canonical ECC repo and display name', () => {
-  assert.strictEqual(codexPlugin.repository, 'https://github.com/affaan-m/ECC');
-  assert.strictEqual(codexPlugin.interface.displayName, 'ECC');
+test('codex plugin.json uses canonical Codex adaptation repo and display name', () => {
+  assert.strictEqual(codexPlugin.repository, 'https://github.com/YBsmorom/ecc-codex-plugin');
+  assert.strictEqual(codexPlugin.interface.displayName, 'ECC for Codex (Unofficial)');
 });
 
 // ── .mcp.json at plugin root ──────────────────────────────────────────────────
@@ -533,8 +533,8 @@ test('.codex-plugin README uses current marketplace add flow', () => {
     'Expected .codex-plugin README to document codex plugin marketplace add',
   );
   assert.ok(
-    readme.includes('codex plugin marketplace add affaan-m/ECC'),
-    'Expected .codex-plugin README to document the canonical ECC repo marketplace source',
+    readme.includes('codex plugin marketplace add YBsmorom/ecc-codex-plugin'),
+    'Expected .codex-plugin README to document the canonical Codex adaptation repo marketplace source',
   );
   assert.ok(
     readme.includes('Official Plugin Directory publishing is coming soon'),

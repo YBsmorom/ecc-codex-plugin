@@ -7,14 +7,16 @@ const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
 
-const WORKFLOW_PATH = path.join(
-  __dirname,
-  '..',
-  '..',
-  '.github',
-  'workflows',
-  'supply-chain-watch.yml',
-);
+function resolveWorkflowPath(fileName) {
+  const candidates = [
+    path.join(__dirname, '..', '..', '.github', 'workflows', fileName),
+    path.join(__dirname, '..', '..', 'docs', 'upstream', 'github-workflows', fileName),
+  ];
+
+  return candidates.find(candidate => fs.existsSync(candidate)) || candidates[0];
+}
+
+const WORKFLOW_PATH = resolveWorkflowPath('supply-chain-watch.yml');
 
 function test(name, fn) {
   try {
