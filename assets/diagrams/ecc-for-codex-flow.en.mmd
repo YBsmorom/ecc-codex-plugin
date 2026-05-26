@@ -1,0 +1,43 @@
+flowchart TD
+    A["User task"] --> B["Codex classifies task<br/>simple / serial / parallel / broad-context / high-risk"]
+
+    B --> C["Check Codex-native capabilities first<br/>enabled plugins / MCP / local scripts / skills"]
+    C --> D["Enter ecc-codex-orchestrator"]
+
+    D --> E["Read lightweight routing data<br/>skill-index.json<br/>routing-map.json<br/>mcp-routing-policy.md"]
+    E --> F["Build candidate ECC surface set"]
+    F --> G["Load the smallest relevant content<br/>needed SKILL.md / docs / scripts only"]
+
+    G --> H{"Overlap with Codex-native tools?"}
+    H -->|Yes| I["Apply MCP duplicate policy<br/>prefer native, authenticated,<br/>least duplicative, clearest evidence"]
+    H -->|No| J["Use selected ECC capability"]
+
+    I --> K["Execute task"]
+    J --> K
+
+    K --> L{"High-risk or substantial change?"}
+    L -->|Yes| M["Add companion skills<br/>TDD / security-review<br/>verification-loop / code-review"]
+    L -->|No| N["Run normal verification"]
+
+    M --> O["Test / review / security check / verify result"]
+    N --> O
+
+    O --> P["Return result<br/>used ECC surfaces<br/>skipped duplicate tools<br/>verification performed"]
+
+    Q["affaan-m/ECC<br/>canonical upstream"] -. "MIT license and attribution" .-> D
+    R["YBsmorom/ecc-codex-plugin<br/>Codex-oriented adapter/fork"] -. "Codex install and routing layer" .-> D
+    R -. "focused upstream PRs for generally useful changes" .-> Q
+
+    classDef input fill:#fff7ed,stroke:#f97316,color:#7c2d12,stroke-width:1.4px
+    classDef codex fill:#eff6ff,stroke:#2563eb,color:#1e3a8a,stroke-width:1.4px
+    classDef ecc fill:#ecfdf5,stroke:#10b981,color:#064e3b,stroke-width:1.4px
+    classDef decision fill:#fefce8,stroke:#ca8a04,color:#713f12,stroke-width:1.4px
+    classDef verify fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95,stroke-width:1.4px
+    classDef upstream fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.4px
+
+    class A input
+    class B,C,K codex
+    class D,E,F,G,I,J,R ecc
+    class H,L decision
+    class M,N,O,P verify
+    class Q upstream

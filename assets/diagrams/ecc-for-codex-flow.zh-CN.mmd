@@ -1,0 +1,43 @@
+flowchart TD
+    A["用户任务"] --> B["Codex 判断任务类型<br/>simple / serial / parallel / broad-context / high-risk"]
+
+    B --> C["先检查 Codex 原生能力<br/>已启用插件 / MCP / 本地脚本 / Skills"]
+    C --> D["进入 ecc-codex-orchestrator"]
+
+    D --> E["读取轻量路由数据<br/>skill-index.json<br/>routing-map.json<br/>mcp-routing-policy.md"]
+    E --> F["生成候选 ECC 能力集"]
+    F --> G["加载最小相关内容<br/>只打开需要的 SKILL.md / docs / scripts"]
+
+    G --> H{"是否和 Codex 原生工具重复？"}
+    H -->|是| I["按 MCP 去重策略选择<br/>优先原生、已认证、少重复、证据清楚的工具"]
+    H -->|否| J["使用选中的 ECC 能力"]
+
+    I --> K["执行任务"]
+    J --> K
+
+    K --> L{"是否高风险或改动较大？"}
+    L -->|是| M["追加 companion skills<br/>TDD / security-review<br/>verification-loop / code-review"]
+    L -->|否| N["普通验证"]
+
+    M --> O["测试 / 审阅 / 安全检查 / 结果验证"]
+    N --> O
+
+    O --> P["输出结果<br/>使用了哪些 ECC surface<br/>跳过了哪些重复工具<br/>完成了哪些验证"]
+
+    Q["affaan-m/ECC<br/>canonical upstream"] -. "保留 MIT license 和署名" .-> D
+    R["YBsmorom/ecc-codex-plugin<br/>Codex-oriented adapter/fork"] -. "提供 Codex 安装与路由层" .-> D
+    R -. "通用改动拆成聚焦 PR 回流上游" .-> Q
+
+    classDef input fill:#fff7ed,stroke:#f97316,color:#7c2d12,stroke-width:1.4px
+    classDef codex fill:#eff6ff,stroke:#2563eb,color:#1e3a8a,stroke-width:1.4px
+    classDef ecc fill:#ecfdf5,stroke:#10b981,color:#064e3b,stroke-width:1.4px
+    classDef decision fill:#fefce8,stroke:#ca8a04,color:#713f12,stroke-width:1.4px
+    classDef verify fill:#f5f3ff,stroke:#7c3aed,color:#4c1d95,stroke-width:1.4px
+    classDef upstream fill:#f8fafc,stroke:#64748b,color:#334155,stroke-width:1.4px
+
+    class A input
+    class B,C,K codex
+    class D,E,F,G,I,J,R ecc
+    class H,L decision
+    class M,N,O,P verify
+    class Q upstream

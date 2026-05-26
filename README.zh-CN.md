@@ -8,6 +8,14 @@
 
 ECC 本身是一套面向 agentic work 的 harness-native operator system，包含技能、规则、命令、MCP 配置、安全工作流、TDD 工作流、代码评审和验证模式。本适配版的重点是：让这些能力可以在 Codex 里使用，而不假设 Claude Code 的 slash command、hook 或 agent 名称一定存在。
 
+## ECC for Codex 流程图
+
+下面展示的是已经提交到仓库的静态渲染图，因此读者看到的是同一张图，不依赖各自 Markdown 渲染器的 Mermaid 版本。
+
+![ECC for Codex 流程图](assets/diagrams/ecc-for-codex-flow.zh-CN.png)
+
+[Mermaid 源文件](assets/diagrams/ecc-for-codex-flow.zh-CN.mmd) | [SVG 导出](assets/diagrams/ecc-for-codex-flow.zh-CN.svg) | [PNG 导出](assets/diagrams/ecc-for-codex-flow.zh-CN.png)
+
 ## 这是什么
 
 这是给 Codex 使用者准备的实际打包层：

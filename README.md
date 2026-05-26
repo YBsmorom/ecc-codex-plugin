@@ -8,6 +8,14 @@
 
 ECC itself is a harness-native operator system for agentic work: skills, rules, commands, MCP configs, security workflows, TDD workflows, review loops, and verification patterns. This adaptation makes that surface usable from Codex without assuming Claude Code slash commands, hooks, or agent names are available.
 
+## ECC For Codex Flow
+
+The rendered diagram below is committed as a static image so readers see the same flow without depending on their Markdown renderer's Mermaid version.
+
+![ECC for Codex workflow](assets/diagrams/ecc-for-codex-flow.en.png)
+
+[Mermaid source](assets/diagrams/ecc-for-codex-flow.en.mmd) | [SVG export](assets/diagrams/ecc-for-codex-flow.en.svg) | [PNG export](assets/diagrams/ecc-for-codex-flow.en.png)
+
 ## What This Is
 
 This is a practical packaging layer for Codex users:
