@@ -2,6 +2,8 @@
 
 本文说明 ECC 是如何适配 Codex 的。
 
+[affaan-m/ECC](https://github.com/affaan-m/ECC) 仍是 canonical upstream（规范上游）。本仓库是面向 Codex 的 adapter/fork，服务于现在的仓库 URL 安装路径；除非上游合并或链接它，否则它不是 canonical ECC 包。
+
 ## 设计目标
 
 ECC 体量较大，包含大量技能、规则、命令、脚本、文档、示例和 MCP 配置。直接把所有内容塞进 Codex 上下文并不现实，也容易让路由失控。因此 Codex 适配版的核心是一个显式路由层。
@@ -24,6 +26,8 @@ ECC 体量较大，包含大量技能、规则、命令、脚本、文档、示�
 - 原 ECC 目录：作为参考材料和可复用实现材料继续保留。
 
 仓库根目录本身就是插件根目录，因此用户可以把仓库 URL 发给 Codex，并要求 Codex 安装。
+
+通用价值的路由、MCP 重复选择、Codex-safe hook 改动，应拆成聚焦 PR 回到上游 ECC，而不是只留在这个适配仓库里。
 
 ## 编排路由器
 

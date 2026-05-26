@@ -1,7 +1,7 @@
 {
   "name": "ecc",
   "version": "2.0.0-rc.1",
-  "description": "Codex adapter fork of ECC: shared agent skills, a Codex orchestration router, MCP routing policy, TDD, security review, code review, and verification workflows.",
+  "description": "Codex-oriented adapter/fork of ECC for repository-URL Codex installs: shared agent skills, a Codex orchestration router, MCP routing policy, TDD, security review, code review, and verification workflows.",
   "author": {
     "name": "Affaan Mustafa; Codex adaptation by YBsmorom",
     "email": "noreply@github.com",
@@ -15,8 +15,8 @@
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "ECC for Codex",
-    "shortDescription": "ECC fork with Codex routing and MCP policy for TDD, security, code review, and autonomous development.",
-    "longDescription": "This fork packages ECC for Codex. It preserves the original MIT-licensed ECC surface while adding a Codex-facing orchestration router, generated skill index, routing map, MCP duplicate policy, and install documentation so Codex can lazily select the right ECC skills, scripts, docs, and MCP servers for each task.",
+    "shortDescription": "ECC adapter/fork with Codex routing and MCP policy for TDD, security, code review, and autonomous development.",
+    "longDescription": "This Codex-oriented adapter/fork packages ECC for repository-URL Codex installs while affaan-m/ECC remains the canonical upstream. It preserves the original MIT-licensed ECC surface and adds a Codex-facing orchestration router, generated skill index, routing map, MCP duplicate policy, and install documentation so Codex can lazily select the right ECC skills, scripts, docs, and MCP servers for each task. It should not be presented as the canonical ECC package or an upstream ECC release unless upstream merges or links it.",
     "developerName": "Affaan Mustafa; Codex adaptation by YBsmorom",
     "category": "Productivity",
     "capabilities": ["Read", "Write"],

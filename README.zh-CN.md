@@ -4,7 +4,7 @@
 
 ![ECC - 面向智能体工作的 harness-native operator system](assets/hero.png)
 
-这个仓库是 [affaan-m/ECC](https://github.com/affaan-m/ECC) 的 Codex 插件适配 fork。它保留原 ECC 内容，并补齐 Codex 插件元数据、路由技能、MCP 去重策略和安装说明，让 Codex 可以把 ECC 当作按任务懒加载的大型插件来使用。
+[affaan-m/ECC](https://github.com/affaan-m/ECC) 仍是 ECC 的 canonical upstream（规范上游）。这个仓库是面向 Codex 的 adapter/fork，服务于现在想通过仓库 URL 让 Codex 安装 ECC 的使用者。它保留原 ECC 内容，并补齐 Codex 插件元数据、路由技能、MCP 去重策略和安装说明，让 Codex 可以把 ECC 当作按任务懒加载的大型插件来使用。
 
 ECC 本身是一套面向 agentic work 的 harness-native operator system，包含技能、规则、命令、MCP 配置、安全工作流、TDD 工作流、代码评审和验证模式。本适配版的重点是：让这些能力可以在 Codex 里使用，而不假设 Claude Code 的 slash command、hook 或 agent 名称一定存在。
 
@@ -12,12 +12,12 @@ ECC 本身是一套面向 agentic work 的 harness-native operator system，包�
 
 这是给 Codex 使用者准备的实际打包层：
 
-- 保留上游 ECC 署名和 MIT 协议边界；
+- 保留上游 ECC 署名和 MIT 协议；
 - 让使用者可以把仓库 URL 交给 Codex 来安装插件；
 - 通过一个 Codex 路由入口，按任务选择最小够用的 ECC 技能和工具集合；
 - 把不被 Codex 当前支持的 `async` hook 声明移除，并尽量保留有界 hook 行为。
 
-上游 ECC 仍然是源项目。本仓库聚焦 Codex 安装、路由、去重和运行时适配；它不声称实现 Claude Code 后台 async hook 的完全同等能力。
+除非 `affaan-m/ECC` 合并或主动链接本仓库，否则不要把本仓库表述为 canonical ECC 包或上游 ECC 发布版。上游 ECC 仍然是源项目。本仓库聚焦 Codex 安装、路由、去重和运行时适配；它不声称实现 Claude Code 后台 async hook 的完全同等能力。
 
 ## 用 Codex 安装
 
@@ -66,6 +66,10 @@ ECC 很有用，但体量不小。如果直接整包塞给 Codex，会造成上�
 3. 当 ECC MCP 和 Codex 原生工具或官方插件重叠时，优先使用更原生、更少重复的工具。
 4. 高风险任务可以自动搭配验证、安全评审或代码评审技能。
 5. hook 使用 Codex 当前支持的生命周期，不再触发 unsupported async hook 警告。
+
+## 上游回流路径
+
+本仓库本地改动应集中在 Codex 仓库 URL 安装路径。通用价值的路由、MCP 重复选择、Codex-safe hook 改动，应拆成聚焦 PR 回到 [affaan-m/ECC](https://github.com/affaan-m/ECC)，而不是只留在 fork 里。
 
 ## 版本和兼容性
 
@@ -117,7 +121,7 @@ Codex 不应该一次性加载完整 ECC 内容。路由器采用渐进披露：
 - 原中文 README：[docs/upstream/README.zh-CN.affaan-m-ECC.md](docs/upstream/README.zh-CN.affaan-m-ECC.md)
 - 已归档的上游 GitHub Actions 工作流：[docs/upstream/github-workflows/](docs/upstream/github-workflows/)
 
-这个仓库是面向上游 ECC 的 Codex 适配和打包层。
+这个仓库是面向上游 ECC 的 Codex 适配和打包层；除非被上游合并或链接，否则不应被描述成 canonical ECC 包或上游 ECC 发布版。
 
 ## 校验
 

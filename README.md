@@ -4,7 +4,7 @@
 
 ![ECC - the harness-native operator system for agentic work](assets/hero.png)
 
-This repository is a Codex adapter fork of [affaan-m/ECC](https://github.com/affaan-m/ECC). It keeps the original ECC content intact and adds the Codex plugin metadata, routing skill, MCP duplicate policy, and installation notes needed for Codex to use ECC as a lazy-loaded plugin.
+[affaan-m/ECC](https://github.com/affaan-m/ECC) is the canonical upstream for ECC. This repository is a Codex-oriented adapter/fork for users who want a repository-URL Codex install path today. It keeps the original ECC content intact and adds the Codex plugin metadata, routing skill, MCP duplicate policy, and installation notes needed for Codex to use ECC as a lazy-loaded plugin.
 
 ECC itself is a harness-native operator system for agentic work: skills, rules, commands, MCP configs, security workflows, TDD workflows, review loops, and verification patterns. This adaptation makes that surface usable from Codex without assuming Claude Code slash commands, hooks, or agent names are available.
 
@@ -12,12 +12,12 @@ ECC itself is a harness-native operator system for agentic work: skills, rules, 
 
 This is a practical packaging layer for Codex users:
 
-- an MIT-licensed fork that preserves upstream ECC attribution;
+- a fork that preserves upstream ECC attribution and the MIT license;
 - a Codex plugin surface that can be installed from a repository URL;
 - a router-first way for Codex to select the smallest useful ECC skill/tool surface for each task;
 - a Codex-safe hook adapter that removes unsupported `async` declarations while preserving bounded hook behavior where possible.
 
-Upstream ECC remains the source project. This fork focuses on Codex installation, routing, duplicate-tool policy, and runtime fit; it does not claim true Claude Code background-async hook parity.
+Do not present this repository as the canonical ECC package or as an upstream ECC release unless `affaan-m/ECC` merges or links it. Upstream ECC remains the source project. This fork focuses on Codex installation, routing, duplicate-tool policy, and runtime fit; it does not claim true Claude Code background-async hook parity.
 
 ## Install With Codex
 
@@ -131,6 +131,10 @@ ECC is useful, but it is large. A direct all-at-once import into Codex would be 
 4. Risky work can add verification, security, or review companions.
 5. Hooks use the Codex-supported lifecycle instead of unsupported async declarations.
 
+## Upstream Contribution Path
+
+Fork-local changes should stay focused on the Codex repository-URL install path. Generally useful routing, MCP duplicate-selection, or Codex-safe hook improvements should be split into focused PRs against [affaan-m/ECC](https://github.com/affaan-m/ECC) so the canonical upstream can adopt them.
+
 ## Version And Compatibility
 
 ### v2.0.0-rc.1
@@ -181,7 +185,7 @@ Original upstream:
 - Original README: [docs/upstream/README.affaan-m-ECC.md](docs/upstream/README.affaan-m-ECC.md)
 - Archived upstream GitHub Actions workflows: [docs/upstream/github-workflows/](docs/upstream/github-workflows/)
 
-This repository is a Codex adaptation and packaging layer for the upstream ECC project.
+This repository is a Codex-oriented adaptation and packaging layer for upstream ECC; it should not be described as the canonical ECC package or an upstream ECC release unless upstream merges or links it.
 
 ## Verification
 

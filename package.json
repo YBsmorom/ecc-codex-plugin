@@ -2,7 +2,7 @@
   "name": "ecc-universal",
   "version": "2.0.0-rc.1",
   "private": true,
-  "description": "Codex adapter fork of ECC with lazy skill routing, MCP duplicate policy, Codex-safe hooks, and preserved upstream MIT attribution",
+  "description": "Codex-oriented adapter/fork of ECC with lazy skill routing, MCP duplicate policy, Codex-safe hooks, and preserved upstream MIT attribution",
   "keywords": [
     "claude-code",
     "ai",

@@ -1,6 +1,6 @@
 # .codex-plugin — Codex Plugin Adapter for ECC
 
-This directory contains the **Codex plugin manifest** for this fork adapter of ECC.
+This directory contains the **Codex plugin manifest** for this Codex-oriented adapter/fork of ECC. `affaan-m/ECC` remains the canonical upstream.
 
 ## Structure
 
@@ -43,6 +43,11 @@ The marketplace entry points at the repository root so `.codex-plugin/plugin.jso
 `skills/`, and `.mcp.json` resolve from one shared source of truth. After adding
 or updating the marketplace, restart Codex and install or enable `ecc` from the
 plugin directory.
+
+Do not present this adapter as the canonical ECC package or an upstream ECC
+release unless `affaan-m/ECC` merges or links it. Generally useful routing, MCP
+duplicate-selection, or Codex-safe hook changes should go back upstream as
+focused PRs.
 
 Official Plugin Directory publishing is coming soon in Codex. Until self-serve
 publishing exists, treat the public repo marketplace as the supported Codex

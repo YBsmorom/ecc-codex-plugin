@@ -2,6 +2,8 @@
 
 This document explains how ECC is adapted for Codex.
 
+[affaan-m/ECC](https://github.com/affaan-m/ECC) remains the canonical upstream. This repository is a Codex-oriented adapter/fork for repository-URL Codex installation today, not the canonical ECC package unless upstream merges or links it.
+
 ## Design Goal
 
 ECC is large: it contains many skills, rules, commands, scripts, docs, examples, and MCP configurations. A useful Codex adaptation must not push all of that into context at once. It needs a router that can select the smallest relevant surface for the current task.
@@ -24,6 +26,8 @@ The plugin root exposes:
 - the original ECC folders for reference and reusable implementation material.
 
 The package keeps the plugin root installable so users can hand Codex the repository URL and ask it to install the plugin.
+
+Generally useful routing, MCP duplicate-selection, or Codex-safe hook changes should be split into focused PRs against upstream ECC rather than living only in this adapter.
 
 ## Orchestration Router
 

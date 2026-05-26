@@ -2,6 +2,8 @@
 
 Copy this prompt into Codex. The user-facing flow is intentionally just repo URL plus install instruction:
 
+Canonical upstream: https://github.com/affaan-m/ECC. This repository is the Codex-oriented adapter/fork install path for users who want repository-URL installation today.
+
 ```text
 Install the ECC Codex plugin adapter from https://github.com/YBsmorom/ecc-codex-plugin.
 Use the repository root as the plugin root, validate .codex-plugin/plugin.json,
@@ -18,6 +20,8 @@ Installer contract for Codex:
 6. Show the user one short task-oriented usage example.
 
 中文：
+
+规范上游： https://github.com/affaan-m/ECC 。本仓库是面向 Codex 的 adapter/fork 安装路径，给现在想通过仓库 URL 安装的使用者使用。
 
 ```text
 请从 https://github.com/YBsmorom/ecc-codex-plugin 安装这个 ECC Codex 插件适配版。

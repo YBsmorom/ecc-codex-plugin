@@ -1,6 +1,6 @@
 # Notice
 
-This repository is a Codex adaptation fork and packaging layer for ECC.
+This repository is a Codex-oriented adapter/fork and packaging layer for ECC. `affaan-m/ECC` remains the canonical upstream.
 
 ## Upstream ECC
 
@@ -36,4 +36,4 @@ Codex-specific adaptation work in this repository includes:
 - Codex-safe hook graph under `hooks/hooks.json` with unsupported `async` declarations removed
 - Codex-oriented installation and adaptation documentation in English and Chinese
 
-This repository is a public Codex plugin packaging of ECC for users who want to install ECC by giving a repository URL to Codex.
+This repository is a public Codex plugin packaging of ECC for users who want to install ECC by giving a repository URL to Codex. It should not be presented as the canonical ECC package or as an upstream ECC release unless `affaan-m/ECC` merges or links it.

@@ -19,7 +19,7 @@ User request -> agent picks a tool -> PreToolUse hook runs -> Tool executes -> P
 Memory persistence lifecycle definitions live in `hooks/memory-persistence/`.
 The executable hook graph remains `hooks/hooks.json`; the memory persistence directory is the stable contract for SessionStart, PreCompact, observation, activity tracking, and SessionEnd behavior.
 
-In this Codex adapter fork, `hooks/hooks.json` is the Codex app compatible hook graph. It is generated from the preserved Claude Code source hook graph at `docs/upstream/claude-code-hooks.json` by converting unsupported async declarations into Codex-supported synchronous hook entries. Rebuild or check it with:
+In this Codex-oriented adapter/fork, `hooks/hooks.json` is the Codex app compatible hook graph. It is generated from the preserved Claude Code source hook graph at `docs/upstream/claude-code-hooks.json` by converting unsupported async declarations into Codex-supported synchronous hook entries. Rebuild or check it with:
 
 ```bash
 npm run codex:hooks:build
