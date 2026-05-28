@@ -182,7 +182,11 @@ function determineStatus(local, adapter, upstream) {
     status = 'local_changes_present';
   } else if (upstreamChangedSinceSync === true) {
     status = 'upstream_changed';
-  } else if (adapterBehind === false && (versionBehind === false || versionBehind === null)) {
+  } else if (
+    (adapterBehind === false || adapterBehind === null)
+    && versionBehind === false
+    && upstreamChangedSinceSync !== true
+  ) {
     status = 'current';
   }
 

@@ -99,6 +99,15 @@ if (test('detects current, available, and unknown update states', () => {
 
   assert.strictEqual(
     determineStatus(
+      { gitCommit: null, version: '1.0.0' },
+      { remoteCommit: different, remoteManifestVersion: '1.0.0' },
+      { remoteCommit: different, syncedCommit: different },
+    ).status,
+    'current',
+  );
+
+  assert.strictEqual(
+    determineStatus(
       { gitCommit: null, version: null },
       { remoteCommit: null, remoteManifestVersion: null },
       { remoteCommit: null },
