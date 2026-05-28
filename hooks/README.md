@@ -28,6 +28,111 @@ npm run codex:hooks:check
 
 Codex app currently skips hooks that declare `async: true`, so the active Codex hook graph intentionally contains no `async` properties. Former async entries run through the Codex plugin bootstrap with Codex-aware root/data directory resolution, timeouts, and fail-open behavior where the underlying hook provides it.
 
+## Codex Active Hook Flow
+
+The active Codex hook graph is easiest to read as a lifecycle pipeline. `PreToolUse`
+hooks can block the current tool call with exit code `2`. Later hooks should be
+treated as observers, validators, or persistence jobs unless explicitly noted.
+
+```mermaid
+flowchart LR
+  SessionStart["SessionStart\nload context + project state"]
+  User["User request"]
+  SelectTool["Agent selects tool"]
+  PreToolUse["PreToolUse\npreflight / policy / health gates"]
+  Tool["Tool executes"]
+  PostToolUse["PostToolUse\nquality, telemetry, observations"]
+  Failure["PostToolUseFailure\nMCP failure recovery"]
+  Stop["Stop\nbatch checks + persistence"]
+  PreCompact["PreCompact\nsave state before compaction"]
+  SessionEnd["SessionEnd\nlifecycle marker"]
+
+  SessionStart --> User --> SelectTool --> PreToolUse --> Tool --> PostToolUse --> Stop
+  Tool -. failed MCP/tool call .-> Failure --> Stop
+  Stop --> User
+  Stop -. context compaction .-> PreCompact
+  Stop -. session closes .-> SessionEnd
+```
+
+### Event Summary
+
+| Event | When it fires | Can block? | Main purpose |
+| --- | --- | --- | --- |
+| `SessionStart` | When a session starts | No | Load bounded prior context and detect project/package-manager state. |
+| `PreToolUse` | Before a tool call | Yes | Apply safety gates, health checks, reminders, and observation capture. |
+| `PostToolUse` | After a successful tool call | No | Record results, run quality signals, update metrics, and warn. |
+| `PostToolUseFailure` | After a failed tool call | Usually no; may steer future calls | Mark unhealthy MCP servers and attempt recovery. |
+| `Stop` | After each assistant response | No in normal use | Batch checks, persistence, session evaluation, cost tracking. |
+| `PreCompact` | Before context compaction | No | Save state before context is summarized or dropped. |
+| `SessionEnd` | When the session ends | No | Write lifecycle marker and cleanup log. |
+
+### Active Hook Inventory
+
+This table is derived from `hooks/hooks.json`, the Codex-compatible active hook
+graph. `Matcher` is the tool selector that causes the hook to run.
+
+| Event | Hook ID | Matcher | Behavior |
+| --- | --- | --- | --- |
+| `SessionStart` | `session:start` | `*` | Loads previous context and detects package manager on a new session. |
+| `PreToolUse` | `pre:bash:dispatcher` | `Bash` | Runs the consolidated Bash preflight bundle for quality, tmux/dev-server handling, push reminders, and GateGuard. |
+| `PreToolUse` | `pre:write:doc-file-warning` | `Write` | Warns when writing non-standard documentation files; warning only. |
+| `PreToolUse` | `pre:edit-write:suggest-compact` | `Edit\|Write` | Suggests manual compaction at logical tool-count intervals. |
+| `PreToolUse` | `pre:observe:continuous-learning` | `*` | Captures tool intent for continuous-learning signals. |
+| `PreToolUse` | `pre:governance-capture` | `Bash\|Write\|Edit\|MultiEdit` | Captures secrets, policy events, and approval-related signals when enabled with `ECC_GOVERNANCE_CAPTURE=1`. |
+| `PreToolUse` | `pre:config-protection` | `Write\|Edit\|MultiEdit` | Blocks edits to linter/formatter configuration files so agents fix code instead of weakening config. |
+| `PreToolUse` | `pre:mcp-health-check` | `*` | Checks MCP health before MCP tool execution and can block unhealthy MCP calls. |
+| `PreToolUse` | `pre:edit-write:gateguard-fact-force` | `Edit\|Write\|MultiEdit` | Blocks the first edit/write to a file until the agent states the investigated facts and edit purpose. |
+| `PostToolUse` | `post:bash:dispatcher` | `Bash` | Runs the consolidated Bash postflight bundle for command logging, PR URL detection, and build-completion notices. |
+| `PostToolUse` | `post:quality-gate` | `Edit\|Write\|MultiEdit` | Runs fast quality checks after file edits. |
+| `PostToolUse` | `post:edit:design-quality-check` | `Edit\|Write\|MultiEdit` | Warns when frontend edits drift toward generic template-looking UI. |
+| `PostToolUse` | `post:edit:accumulator` | `Edit\|Write\|MultiEdit` | Records edited JS/TS files so `Stop` can run one batch format/typecheck pass. |
+| `PostToolUse` | `post:edit:console-warn` | `Edit` | Warns when edited code introduces `console.log` statements. |
+| `PostToolUse` | `post:governance-capture` | `Bash\|Write\|Edit\|MultiEdit` | Captures governance events from tool outputs when enabled with `ECC_GOVERNANCE_CAPTURE=1`. |
+| `PostToolUse` | `post:session-activity-tracker` | `*` | Tracks per-session tool calls and file activity for ECC2 metrics. |
+| `PostToolUse` | `post:observe:continuous-learning` | `*` | Captures tool results for continuous-learning signals. |
+| `PostToolUse` | `post:ecc-metrics-bridge` | `*` | Maintains running session metrics for the statusline and context monitor. |
+| `PostToolUse` | `post:ecc-context-monitor` | `*` | Injects warnings on context exhaustion, high cost, scope creep, or tool loops. |
+| `PostToolUseFailure` | `post:mcp-health-check` | `*` | Tracks failed MCP calls, marks unhealthy servers, and attempts reconnect. |
+| `Stop` | `stop:format-typecheck` | `*` | Runs one batch Biome/Prettier and `tsc` pass for edited JS/TS files. |
+| `Stop` | `stop:check-console-log` | `*` | Checks modified files for `console.log` after each response. |
+| `Stop` | `stop:session-end` | `*` | Persists session state after each response when transcript metadata is available. |
+| `Stop` | `stop:evaluate-session` | `*` | Evaluates the session for extractable patterns. |
+| `Stop` | `stop:cost-tracker` | `*` | Tracks token and cost metrics per session. |
+| `Stop` | `stop:desktop-notify` | `*` | Sends a desktop notification on macOS/WSL in `standard` and `strict` profiles. |
+| `PreCompact` | `pre:compact` | `*` | Saves state before context compaction. |
+| `SessionEnd` | `session:end:marker` | `*` | Writes a non-blocking session-end lifecycle marker. |
+
+### Bash Dispatcher Subhooks
+
+`pre:bash:dispatcher` and `post:bash:dispatcher` are wrappers around smaller
+subhooks in `scripts/hooks/bash-hook-dispatcher.js`.
+
+| Dispatcher phase | Subhook ID | Default profile | Can block? | Purpose |
+| --- | --- | --- | --- | --- |
+| Pre Bash | `pre:bash:block-no-verify` | `minimal`, `standard`, `strict` | Yes | Blocks `--no-verify` and similar attempts to bypass quality gates. |
+| Pre Bash | `pre:bash:auto-tmux-dev` | all profiles | Can steer/modify behavior | Routes long-running dev-server commands toward tmux-style operation where supported. |
+| Pre Bash | `pre:bash:tmux-reminder` | `strict` | No | Reminds agents to use tmux for long-running commands. |
+| Pre Bash | `pre:bash:git-push-reminder` | `strict` | No | Reminds agents to inspect work before pushing. |
+| Pre Bash | `pre:bash:commit-quality` | `strict` | Yes for critical issues | Checks commit quality, staged-file issues, secrets, and obvious debug statements. |
+| Pre Bash | `pre:bash:gateguard-fact-force` | `standard`, `strict` | Yes | Requires the agent to state the current request and what the Bash command verifies before the first Bash action. |
+| Post Bash | `post:bash:command-log-audit` | all profiles | No | Logs command activity for audit/debugging. |
+| Post Bash | `post:bash:command-log-cost` | all profiles | No | Adds lightweight command/cost telemetry. |
+| Post Bash | `post:bash:pr-created` | `standard`, `strict` | No | Detects PR creation output and records the PR/review command. |
+| Post Bash | `post:bash:build-complete` | `standard`, `strict` | No | Emits completion notices for build-like commands. |
+
+### Operator Impact
+
+Most hooks are fail-open observers. The hooks that operators most often notice
+are the intentional blockers:
+
+| Hook | Why operators notice it | Recovery |
+| --- | --- | --- |
+| `pre:bash:gateguard-fact-force` | Blocks the first Bash command until the agent states the request and command purpose. | Set `ECC_GATEGUARD=off` or add `pre:bash:gateguard-fact-force` to `ECC_DISABLED_HOOKS`. |
+| `pre:edit-write:gateguard-fact-force` | Blocks first edits/writes until the agent states facts about the target file and intended change. | Set `ECC_GATEGUARD=off` or add `pre:edit-write:gateguard-fact-force` to `ECC_DISABLED_HOOKS`. |
+| `pre:config-protection` | Blocks linter/formatter config edits. | Fix code instead, or explicitly disable the hook when intentionally changing quality policy. |
+| `pre:mcp-health-check` | Blocks calls to MCP servers that are marked unhealthy. | Let the agent fall back to non-MCP tools or repair/restart the MCP server. |
+| `stop:format-typecheck` | May add time after JS/TS edits. | Keep it enabled for code work; disable only for docs-only sessions if it becomes noisy. |
+
 ## Installing These Hooks Manually
 
 For Claude Code manual installs, do not paste the raw repo `hooks.json` into `~/.claude/settings.json` or copy it directly into `~/.claude/hooks/hooks.json`. In this fork, the checked-in active file is Codex-oriented. Claude Code operators should use upstream ECC or the preserved source hook graph as reference material.
@@ -43,42 +148,6 @@ pwsh -File .\install.ps1 --target claude --modules hooks-runtime
 ```
 
 That installs resolved hooks to `~/.claude/hooks/hooks.json`. On Windows, the Claude config root is `%USERPROFILE%\\.claude`.
-
-### PreToolUse Hooks
-
-| Hook | Matcher | Behavior | Exit Code |
-|------|---------|----------|-----------|
-| **Dev server blocker** | `Bash` | Blocks `npm run dev` etc. outside tmux — ensures log access | 2 (blocks) |
-| **Tmux reminder** | `Bash` | Suggests tmux for long-running commands (npm test, cargo build, docker) | 0 (warns) |
-| **Git push reminder** | `Bash` | Reminds to review changes before `git push` | 0 (warns) |
-| **Pre-commit quality check** | `Bash` | Runs quality checks before `git commit`: lints staged files, validates commit message format when provided via `-m/--message`, detects console.log/debugger/secrets | 2 (blocks critical) / 0 (warns) |
-| **Doc file warning** | `Write` | Warns about non-standard `.md`/`.txt` files (allows README, CLAUDE, CONTRIBUTING, CHANGELOG, LICENSE, SKILL, docs/, skills/); cross-platform path handling | 0 (warns) |
-| **Strategic compact** | `Edit\|Write` | Suggests manual `/compact` at logical intervals (every ~50 tool calls) | 0 (warns) |
-
-### PostToolUse Hooks
-
-| Hook | Matcher | What It Does |
-|------|---------|-------------|
-| **PR logger** | `Bash` | Logs PR URL and review command after `gh pr create` |
-| **Build analysis** | `Bash` | Bounded post-command analysis/logging through the Codex hook adapter |
-| **Quality gate** | `Edit\|Write\|MultiEdit` | Runs fast quality checks after edits |
-| **Design quality check** | `Edit\|Write\|MultiEdit` | Warns when frontend edits drift toward generic template-looking UI |
-| **Prettier format** | `Edit` | Auto-formats JS/TS files with Prettier after edits |
-| **TypeScript check** | `Edit` | Runs `tsc --noEmit` after editing `.ts`/`.tsx` files |
-| **console.log warning** | `Edit` | Warns about `console.log` statements in edited files |
-
-### Lifecycle Hooks
-
-| Hook | Event | What It Does |
-|------|-------|-------------|
-| **Session start** | `SessionStart` | Loads previous context and detects package manager |
-| **Pre-compact** | `PreCompact` | Saves state before context compaction |
-| **Console.log audit** | `Stop` | Checks all modified files for `console.log` after each response |
-| **Session summary** | `Stop` | Persists session state when transcript path is available |
-| **Pattern extraction** | `Stop` | Evaluates session for extractable patterns (continuous learning) |
-| **Cost tracker** | `Stop` | Emits lightweight run-cost telemetry markers |
-| **Desktop notify** | `Stop` | Sends macOS desktop notification with task summary (standard+) |
-| **Session end marker** | `SessionEnd` | Lifecycle marker and cleanup log |
 
 ## Customizing Hooks
 
