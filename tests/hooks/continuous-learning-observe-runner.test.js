@@ -94,6 +94,23 @@ function writeFakeObserveScript(tempRoot) {
   fs.chmodSync(scriptPath, 0o755);
 }
 
+function hasUsableShellRuntime() {
+  const candidates = [];
+  if (process.env.BASH && process.env.BASH.trim()) {
+    candidates.push(process.env.BASH.trim());
+  }
+  candidates.push(process.platform === 'win32' ? 'bash.exe' : 'bash');
+  candidates.push(process.platform === 'win32' ? 'bash' : 'sh');
+
+  return candidates.some(candidate => {
+    const result = spawnSync(candidate, ['-c', ':'], {
+      stdio: 'ignore',
+      windowsHide: true,
+    });
+    return !result.error && result.status === 0;
+  });
+}
+
 function runWithFlags(tempRoot, hookId, relScriptPath, stdin) {
   return spawnSync(process.execPath, [runWithFlagsPath, hookId, relScriptPath, 'standard,strict'], {
     input: stdin,
@@ -155,6 +172,11 @@ function runTests() {
   })) passed++; else failed++;
 
   if (test('observe-runner invokes observe.sh with phase, stdin, and plugin root', () => {
+    if (!hasUsableShellRuntime()) {
+      console.log('    (skipped: shell runtime is unavailable)');
+      return;
+    }
+
     withTempPluginRoot(tempRoot => {
       writeFakeObserveScript(tempRoot);
       const env = fs.existsSync('/bin/sh') ? { BASH: '/bin/sh' } : {};

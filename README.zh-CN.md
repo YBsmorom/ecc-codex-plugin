@@ -23,7 +23,8 @@ ECC 本身是一套面向 agentic work 的 harness-native operator system，包�
 - 保留上游 ECC 署名和 MIT 协议；
 - 让使用者可以把仓库 URL 交给 Codex 来安装插件；
 - 通过一个 Codex 路由入口，按任务选择最小够用的 ECC 技能和工具集合；
-- 把不被 Codex 当前支持的 `async` hook 声明移除，并尽量保留有界 hook 行为。
+- 把不被 Codex 当前支持的 `async` hook 声明移除，并尽量保留有界 hook 行为；
+- 同步上游 ECC 2.0 preview 的新技能、代理、命令、MCP catalog 和集成夹具。
 
 除非 `affaan-m/ECC` 合并或主动链接本仓库，否则不要把本仓库表述为 canonical ECC 包或上游 ECC 发布版。上游 ECC 仍然是源项目。本仓库聚焦 Codex 安装、路由、去重和运行时适配；它不声称实现 Claude Code 后台 async hook 的完全同等能力。
 
@@ -58,9 +59,9 @@ git clone https://github.com/YBsmorom/ecc-codex-plugin.git
 
 | 新增表面 | 为什么需要 | 相比上游 ECC 的变化 |
 | --- | --- | --- |
-| `.codex-plugin/plugin.json` | 让 Codex 能把仓库识别为插件。 | 上游 ECC 不是以这个 fork 的 Codex 仓库 URL 安装流为主。 |
+| `.codex-plugin/plugin.json` | 让 Codex 能把仓库识别为插件。 | 上游 ECC 仍是 canonical；本 fork 明确保留 Codex 仓库 URL 安装流。 |
 | `skills/ecc-codex-orchestrator/` | 给 Codex 一个统一路由入口，而不是直接加载完整 ECC。 | 上游技能保持不动；这里增加 Codex 选择器。 |
-| `skill-index.json` 和 `routing-map.json` | 让 233 个技能先通过轻量元数据被检索。 | 避免一开始把全部技能正文塞进上下文。 |
+| `skill-index.json` 和 `routing-map.json` | 让 247 个技能先通过轻量元数据被检索。 | 避免一开始把全部技能正文塞进上下文。 |
 | `mcp-routing-policy.md` | 处理 ECC MCP 与 Codex 原生工具、官方插件的重复。 | 默认选择更原生、更少重复、证据更清楚的工具。 |
 | `hooks/hooks.json` | 提供不含 `async` 声明的 Codex-safe hook 图。 | 保留 Claude 源 hook 图作参考，并把原 async 条目适配为有界 Codex hook。 |
 | 中英文文档 | 说明安装方式、边界、署名、校验和路由策略。 | 增加 Codex 使用者需要的说明，不删除上游文档。 |
@@ -96,14 +97,18 @@ Codex 安装本适配版时使用 `https://github.com/YBsmorom/ecc-codex-plugin`
 
 上游插件命令的规范命名空间是 `/ecc:plan`。在 Codex 里，优先用自然语言任务触发 `ecc-codex-orchestrator` 路由；command shim 只作为兼容参考，除非当前 harness 明确支持。
 
-GitHub Copilot prompt 文件位于 `.github/prompts/`，`.vscode/settings.json` 中启用了 `chat.promptFiles`，供兼容的 VS Code 版本读取。
+## 这次同步进来的上游更新
 
-发布和 harness 参考：
+本分支已经同步到 `affaan-m/ECC@928076cc` 附近的上游 preview surface，主要包括：
 
-- [Hermes setup](docs/HERMES-SETUP.md)
-- [ECC 2.0.0-rc.1 release notes](docs/releases/2.0.0-rc.1/release-notes.md)
+- `marketing-agent` 和 `marketing-campaign` 命令；
+- `integrations/aura/` 下的 opt-in AURA trust adapter；
+- MCP catalog 中的 Squish Memory 条目；
+- frontend accessibility、social publisher、benchmark/data throughput、ITO、prediction-market、parallel-execution、recursive-decision、latency-critical 等新增技能；
+- 德语文档和多语言 README 计数更新；
+- cost tracker 的 fresh harness cost cache 优先逻辑。
 
-MCP 管理说明：Claude Code 运行时禁用 MCP 应使用 `/mcp`，Claude Code 会把这些选择保存在 `~/.claude.json`。`ECC_DISABLED_MCPS` 只是 ECC 安装/同步过滤器，不是 live Claude Code toggle。
+这些内容是上游 ECC 的持续更新；本仓库只负责把它们同步进 Codex 适配包，并保持清楚的 fork 边界。
 
 ## Codex 如何使用 ECC
 
@@ -137,12 +142,14 @@ Codex 不应该一次性加载完整 ECC 内容。路由器采用渐进披露：
 
 ```powershell
 python <codex-home>\skills\.system\plugin-creator\scripts\validate_plugin.py <repo-path>
+npm run codex:hooks:check
+npm test
 ```
 
 公开推送前还应扫描真实凭据。安全测试夹具里可能包含模拟 token/API key 字符串；真实 `.env` 文件不能提交。
 
 ## 上游 Catalog 快照
 
-这个 Codex 适配版继续保留上游 ECC catalog。安装后，你现在可以使用 60 个代理、233 个技能和 75 个命令。
+这个 Codex 适配版继续保留上游 ECC catalog。安装后，你现在可以使用 61 个代理、247 个技能和 76 个命令。
 
 该快照用于保留上游校验脚本对 root README 的计数约束；Codex 实际使用时仍通过 `ecc-codex-orchestrator` 按任务懒加载。

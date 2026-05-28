@@ -47,6 +47,26 @@ function resetAliases() {
   }
 }
 
+function restoreOriginalHomeAndCleanup() {
+  if (origHome !== undefined) {
+    process.env.HOME = origHome;
+  } else {
+    delete process.env.HOME;
+  }
+
+  if (origUserProfile !== undefined) {
+    process.env.USERPROFILE = origUserProfile;
+  } else {
+    delete process.env.USERPROFILE;
+  }
+
+  try {
+    fs.rmSync(tmpHome, { recursive: true, force: true });
+  } catch {
+    // best-effort
+  }
+}
+
 function runTests() {
   const rocketEmoji = String.fromCodePoint(0x1F680);
   console.log('\n=== Testing session-aliases.js ===\n');
@@ -826,18 +846,8 @@ function runTests() {
     aliases.deleteAlias('atomic-test-2');
   })) passed++; else failed++;
 
-  // Cleanup — restore both HOME and USERPROFILE (Windows)
-  process.env.HOME = origHome;
-  if (origUserProfile !== undefined) {
-    process.env.USERPROFILE = origUserProfile;
-  } else {
-    delete process.env.USERPROFILE;
-  }
-  try {
-    fs.rmSync(tmpHome, { recursive: true, force: true });
-  } catch {
-    // best-effort
-  }
+  // Keep the isolated HOME active for the remaining tests. Restoring it here
+  // can make later cases write to the real home directory or to ./undefined.
 
   // ── Round 48: rapid sequential saves data integrity ──
   console.log('\nRound 48: rapid sequential saves:');
@@ -1821,6 +1831,8 @@ function runTests() {
     assert.ok(keys.includes('normal'),
       'Object.keys includes normal alias');
   })) passed++; else failed++;
+
+  restoreOriginalHomeAndCleanup();
 
   // Summary
   console.log(`\nResults: Passed: ${passed}, Failed: ${failed}`);

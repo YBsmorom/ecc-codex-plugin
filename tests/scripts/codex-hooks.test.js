@@ -51,6 +51,14 @@ function runBash(scriptPath, args = [], env = {}, cwd = repoRoot) {
   });
 }
 
+function detectUsableBash() {
+  const result = spawnSync('bash', ['-lc', 'printf ok'], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  return result.status === 0 && result.stdout === 'ok';
+}
+
 function runNode(scriptPath, args = [], env = {}, cwd = repoRoot) {
   return spawnSync('node', [scriptPath, ...args], {
     cwd,
@@ -84,11 +92,14 @@ function makeHermeticCodexEnv(homeDir, codexDir, extraEnv = {}) {
 
 let passed = 0;
 let failed = 0;
+const hasUsableBash = detectUsableBash();
 
 // Windows NTFS does not allow double-quote characters in file paths,
 // so the quoted-path shell-injection test is only meaningful on Unix.
 if (os.platform() === 'win32') {
   console.log('  - install-global-git-hooks.sh quoted paths (skipped on Windows)');
+} else if (!hasUsableBash) {
+  console.log('  - install-global-git-hooks.sh quoted paths (skipped: bash is unavailable)');
 } else if (
   test('install-global-git-hooks.sh handles quoted hook paths without shell injection', () => {
     const homeDir = createTempDir('codex-hooks-home-');
@@ -396,7 +407,9 @@ if (
   passed++;
 else failed++;
 
-if (
+if (!hasUsableBash) {
+  console.log('  - sync installs the missing Codex baseline and accepts the legacy context7 MCP section (skipped: bash is unavailable)');
+} else if (
   test('sync installs the missing Codex baseline and accepts the legacy context7 MCP section', () => {
     const homeDir = createTempDir('codex-sync-home-');
     const codexDir = path.join(homeDir, '.codex');
@@ -471,7 +484,9 @@ if (
   passed++;
 else failed++;
 
-if (
+if (!hasUsableBash) {
+  console.log('  - sync adds parent-table keys when the target only declares an implicit parent table (skipped: bash is unavailable)');
+} else if (
   test('sync adds parent-table keys when the target only declares an implicit parent table', () => {
     const homeDir = createTempDir('codex-sync-implicit-parent-home-');
     const codexDir = path.join(homeDir, '.codex');

@@ -13,6 +13,14 @@ console.log('=== Testing orchestrate-codex-worker.sh ===\n');
 let passed = 0;
 let failed = 0;
 
+function hasUsableBash() {
+  const result = spawnSync('bash', ['-lc', 'printf ok'], {
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  return result.status === 0 && result.stdout === 'ok';
+}
+
 function test(desc, fn) {
   try {
     fn();
@@ -24,7 +32,9 @@ function test(desc, fn) {
   }
 }
 
-test('fails fast for an unreadable task file and records failure artifacts', () => {
+if (!hasUsableBash()) {
+  console.log('  - fails fast for an unreadable task file and records failure artifacts (skipped: bash is unavailable)');
+} else test('fails fast for an unreadable task file and records failure artifacts', () => {
   const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'ecc-orch-worker-'));
   const handoffFile = path.join(tempRoot, '.orchestration', 'docs', 'handoff.md');
   const statusFile = path.join(tempRoot, '.orchestration', 'docs', 'status.md');
