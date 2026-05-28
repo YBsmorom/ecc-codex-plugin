@@ -168,16 +168,19 @@ function determineStatus(local, adapter, upstream) {
   const versionBehind = versionComparable
     ? local.version !== adapter.remoteManifestVersion
     : null;
-  const upstreamDiffersFromAdapter = adapter.remoteCommit && upstream.remoteCommit
-    ? adapter.remoteCommit !== upstream.remoteCommit
-    : null;
+  const upstreamComparable = Boolean(upstream.remoteCommit && upstream.syncedCommit);
+  const upstreamChangedSinceSync = upstreamComparable
+    ? upstream.remoteCommit !== upstream.syncedCommit
+    : adapter.remoteCommit && upstream.remoteCommit
+      ? adapter.remoteCommit !== upstream.remoteCommit
+      : null;
 
   let status = 'unknown';
   if (adapterBehind === true || versionBehind === true) {
     status = 'update_available';
   } else if (local.dirty) {
     status = 'local_changes_present';
-  } else if (upstreamDiffersFromAdapter === true) {
+  } else if (upstreamChangedSinceSync === true) {
     status = 'upstream_changed';
   } else if (adapterBehind === false && (versionBehind === false || versionBehind === null)) {
     status = 'current';
@@ -187,7 +190,7 @@ function determineStatus(local, adapter, upstream) {
     status,
     adapterBehind,
     versionBehind,
-    upstreamDiffersFromAdapter,
+    upstreamChangedSinceSync,
   };
 }
 
@@ -224,6 +227,7 @@ async function buildReport(options) {
   const upstream = {
     repo: upstreamRepo,
     ref: upstreamRef,
+    syncedCommit: update.syncedUpstreamCommit || null,
     remoteCommit: readRemoteGitCommit(upstreamRepo, upstreamRef),
   };
 

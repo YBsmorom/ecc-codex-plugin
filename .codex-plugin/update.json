@@ -4,6 +4,7 @@
   "adapterRef": "main",
   "canonicalUpstream": "https://github.com/affaan-m/ECC.git",
   "upstreamRef": "main",
+  "syncedUpstreamCommit": "928076cc08cbb31e8549cea2883b4f51811de1c8",
   "strategy": "check-only",
   "notes": [
     "This repository is a Codex-oriented adapter/fork. affaan-m/ECC remains the canonical upstream.",

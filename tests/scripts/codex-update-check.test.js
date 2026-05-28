@@ -67,7 +67,7 @@ if (test('detects current, available, and unknown update states', () => {
     determineStatus(
       { gitCommit: same, version: '1.0.0' },
       { remoteCommit: same, remoteManifestVersion: '1.0.0' },
-      { remoteCommit: same },
+      { remoteCommit: same, syncedCommit: same },
     ).status,
     'current',
   );
@@ -83,10 +83,19 @@ if (test('detects current, available, and unknown update states', () => {
   const upstreamChanged = determineStatus(
     { gitCommit: same, version: '1.0.0' },
     { remoteCommit: same, remoteManifestVersion: '1.0.0' },
-    { remoteCommit: different },
+    { remoteCommit: different, syncedCommit: same },
   );
   assert.strictEqual(upstreamChanged.status, 'upstream_changed');
-  assert.strictEqual(upstreamChanged.upstreamDiffersFromAdapter, true);
+  assert.strictEqual(upstreamChanged.upstreamChangedSinceSync, true);
+
+  assert.strictEqual(
+    determineStatus(
+      { gitCommit: same, version: '1.0.0' },
+      { remoteCommit: same, remoteManifestVersion: '1.0.0' },
+      { remoteCommit: different, syncedCommit: different },
+    ).status,
+    'current',
+  );
 
   assert.strictEqual(
     determineStatus(
