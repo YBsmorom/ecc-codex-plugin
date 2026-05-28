@@ -1,7 +1,7 @@
 {
-  "generated_at": "2026-05-25T11:08:09",
+  "generated_at": "2026-05-28T09:47:31",
   "generator": "skills/ecc-codex-orchestrator/scripts/rebuild-skill-index.py",
-  "skill_count": 233,
+  "skill_count": 247,
   "selection_guidance": {
     "default_candidate_count": 8,
     "minimum_candidate_count_for_non_trivial_tasks": 5,
@@ -1058,6 +1058,56 @@
         "use"
       ],
       "path": "skills/benchmark/SKILL.md"
+    },
+    {
+      "id": "benchmark-optimization-loop",
+      "name": "benchmark-optimization-loop",
+      "title": "Benchmark Optimization Loop",
+      "description": "Use when the user asks to make something faster, try many variants, run recursive optimization, benchmark latency/throughput/cost, or choose the best implementation by repeated measured tests.",
+      "origin": "ECC",
+      "domains": [
+        "testing",
+        "orchestration"
+      ],
+      "tool_needs": [],
+      "companion_skills": [
+        "verification-loop",
+        "agentic-engineering",
+        "tdd-workflow"
+      ],
+      "keywords": [
+        "asks",
+        "benchmark",
+        "benchmark-optimization-loop",
+        "best",
+        "by",
+        "choose",
+        "cost",
+        "ecc",
+        "faster",
+        "implementation",
+        "latency",
+        "loop",
+        "make",
+        "many",
+        "measured",
+        "optimization",
+        "or",
+        "recursive",
+        "repeated",
+        "run",
+        "something",
+        "tests.",
+        "the",
+        "throughput",
+        "to",
+        "try",
+        "use",
+        "user",
+        "variants",
+        "when"
+      ],
+      "path": "skills/benchmark-optimization-loop/SKILL.md"
     },
     {
       "id": "blender-motion-state-inspection",
@@ -2775,6 +2825,48 @@
       "path": "skills/data-scraper-agent/SKILL.md"
     },
     {
+      "id": "data-throughput-accelerator",
+      "name": "data-throughput-accelerator",
+      "title": "Data Throughput Accelerator",
+      "description": "Use when large data ingestion, backfill, export, ETL, warehouse loading, manifest catch-up, or table synchronization needs to become much faster while preserving data correctness.",
+      "origin": "ECC",
+      "domains": [
+        "general"
+      ],
+      "tool_needs": [],
+      "companion_skills": [],
+      "keywords": [
+        "accelerator",
+        "backfill",
+        "become",
+        "catch-up",
+        "correctness.",
+        "data",
+        "data-throughput-accelerator",
+        "ecc",
+        "etl",
+        "export",
+        "faster",
+        "ingestion",
+        "large",
+        "loading",
+        "manifest",
+        "much",
+        "needs",
+        "or",
+        "preserving",
+        "synchronization",
+        "table",
+        "throughput",
+        "to",
+        "use",
+        "warehouse",
+        "when",
+        "while"
+      ],
+      "path": "skills/data-throughput-accelerator/SKILL.md"
+    },
+    {
       "id": "database-migrations",
       "name": "database-migrations",
       "title": "Database Migration Patterns",
@@ -4211,6 +4303,59 @@
       "path": "skills/foundation-models-on-device/SKILL.md"
     },
     {
+      "id": "frontend-a11y",
+      "name": "frontend-a11y",
+      "title": "Frontend Accessibility Patterns",
+      "description": "Accessibility patterns for React and Next.js — semantic HTML, ARIA attributes, form labeling, keyboard navigation, focus management, and screen reader support. Use when building any interactive UI component or form.",
+      "origin": "community",
+      "domains": [
+        "frontend",
+        "ops"
+      ],
+      "tool_needs": [
+        "playwright"
+      ],
+      "companion_skills": [
+        "browser-qa",
+        "e2e-testing",
+        "tdd-workflow"
+      ],
+      "keywords": [
+        "accessibility",
+        "and",
+        "any",
+        "aria",
+        "attributes",
+        "building",
+        "community",
+        "component",
+        "focus",
+        "for",
+        "form",
+        "form.",
+        "frontend",
+        "frontend-a11y",
+        "html",
+        "interactive",
+        "keyboard",
+        "labeling",
+        "management",
+        "navigation",
+        "next.js",
+        "or",
+        "patterns",
+        "react",
+        "reader",
+        "screen",
+        "semantic",
+        "support.",
+        "ui",
+        "use",
+        "when"
+      ],
+      "path": "skills/frontend-a11y/SKILL.md"
+    },
+    {
       "id": "frontend-design-direction",
       "name": "frontend-design-direction",
       "title": "Frontend Design Direction",
@@ -5601,6 +5746,217 @@
       "path": "skills/iterative-retrieval/SKILL.md"
     },
     {
+      "id": "ito-basket-compare",
+      "name": "ito-basket-compare",
+      "title": "Itô Basket Compare",
+      "description": "Compare Itô prediction-market baskets against a user's knowledge base, portfolio notes, financial context, watchlist, or research thesis. Use for read-only basket comparison and gap analysis without investment advice or live trading.",
+      "origin": "ECC",
+      "domains": [
+        "research"
+      ],
+      "tool_needs": [
+        "exa"
+      ],
+      "companion_skills": [
+        "search-first"
+      ],
+      "keywords": [
+        "advice",
+        "against",
+        "analysis",
+        "and",
+        "base",
+        "basket",
+        "baskets",
+        "compare",
+        "comparison",
+        "context",
+        "ecc",
+        "financial",
+        "for",
+        "gap",
+        "investment",
+        "it",
+        "ito-basket-compare",
+        "knowledge",
+        "live",
+        "notes",
+        "or",
+        "portfolio",
+        "prediction-market",
+        "read-only",
+        "research",
+        "thesis.",
+        "trading.",
+        "use",
+        "user",
+        "watchlist",
+        "without"
+      ],
+      "path": "skills/ito-basket-compare/SKILL.md"
+    },
+    {
+      "id": "ito-data-atlas-agent",
+      "name": "ito-data-atlas-agent",
+      "title": "Itô Data Atlas Agent",
+      "description": "Design background Data Atlas style agents for Itô basket research, market discovery, parameter drafting, and human-in-the-loop editing. Use for architecture and workflow planning, not live order execution.",
+      "origin": "ECC",
+      "domains": [
+        "frontend",
+        "research",
+        "orchestration"
+      ],
+      "tool_needs": [
+        "exa",
+        "sequential-thinking"
+      ],
+      "companion_skills": [
+        "browser-qa",
+        "e2e-testing",
+        "search-first",
+        "agentic-engineering",
+        "tdd-workflow"
+      ],
+      "keywords": [
+        "agent",
+        "agents",
+        "and",
+        "architecture",
+        "atlas",
+        "background",
+        "basket",
+        "data",
+        "design",
+        "discovery",
+        "drafting",
+        "ecc",
+        "editing.",
+        "execution.",
+        "for",
+        "human-in-the-loop",
+        "it",
+        "ito-data-atlas-agent",
+        "live",
+        "market",
+        "not",
+        "order",
+        "parameter",
+        "planning",
+        "research",
+        "style",
+        "use",
+        "workflow"
+      ],
+      "path": "skills/ito-data-atlas-agent/SKILL.md"
+    },
+    {
+      "id": "ito-market-intelligence",
+      "name": "ito-market-intelligence",
+      "title": "Itô Market Intelligence",
+      "description": "Research prediction-market events, venues, underliers, liquidity, and news context for Itô basket workflows. Use for read-only market intelligence, API-gated Itô exploration, and source-grounded prediction-market briefings without investment advice or live trading.",
+      "origin": "ECC",
+      "domains": [
+        "backend",
+        "research",
+        "orchestration"
+      ],
+      "tool_needs": [
+        "exa"
+      ],
+      "companion_skills": [
+        "search-first",
+        "agentic-engineering",
+        "tdd-workflow"
+      ],
+      "keywords": [
+        "advice",
+        "and",
+        "api-gated",
+        "basket",
+        "briefings",
+        "context",
+        "ecc",
+        "events",
+        "exploration",
+        "for",
+        "intelligence",
+        "investment",
+        "it",
+        "ito-market-intelligence",
+        "liquidity",
+        "live",
+        "market",
+        "news",
+        "or",
+        "prediction-market",
+        "read-only",
+        "research",
+        "source-grounded",
+        "trading.",
+        "underliers",
+        "use",
+        "venues",
+        "without",
+        "workflows."
+      ],
+      "path": "skills/ito-market-intelligence/SKILL.md"
+    },
+    {
+      "id": "ito-trade-planner",
+      "name": "ito-trade-planner",
+      "title": "Itô Trade Planner",
+      "description": "Build a non-advisory prediction-market trade planning worksheet for Itô or venue workflows. Use to inspect venues, underliers, constraints, order prerequisites, and manual execution steps without placing trades or recommending positions.",
+      "origin": "ECC",
+      "domains": [
+        "research",
+        "orchestration",
+        "ops",
+        "business"
+      ],
+      "tool_needs": [
+        "exa",
+        "sequential-thinking"
+      ],
+      "companion_skills": [
+        "search-first",
+        "agentic-engineering"
+      ],
+      "keywords": [
+        "and",
+        "build",
+        "constraints",
+        "ecc",
+        "execution",
+        "for",
+        "inspect",
+        "it",
+        "ito-trade-planner",
+        "manual",
+        "non-advisory",
+        "or",
+        "order",
+        "placing",
+        "planner",
+        "planning",
+        "positions.",
+        "prediction-market",
+        "prerequisites",
+        "recommending",
+        "steps",
+        "to",
+        "trade",
+        "trades",
+        "underliers",
+        "use",
+        "venue",
+        "venues",
+        "without",
+        "workflows.",
+        "worksheet"
+      ],
+      "path": "skills/ito-trade-planner/SKILL.md"
+    },
+    {
       "id": "java-coding-standards",
       "name": "java-coding-standards",
       "title": "Java Coding Standards",
@@ -6184,6 +6540,55 @@
       "path": "skills/laravel-verification/SKILL.md"
     },
     {
+      "id": "latency-critical-systems",
+      "name": "latency-critical-systems",
+      "title": "Latency Critical Systems",
+      "description": "Use for latency-sensitive systems such as realtime dashboards, market data, streaming agents, execution gateways, queues, caches, or HFT-like infrastructure where freshness and p95 latency matter.",
+      "origin": "ECC",
+      "domains": [
+        "research",
+        "orchestration"
+      ],
+      "tool_needs": [
+        "exa"
+      ],
+      "companion_skills": [
+        "search-first",
+        "agentic-engineering"
+      ],
+      "keywords": [
+        "agents",
+        "and",
+        "as",
+        "caches",
+        "critical",
+        "dashboards",
+        "data",
+        "ecc",
+        "execution",
+        "for",
+        "freshness",
+        "gateways",
+        "hft-like",
+        "infrastructure",
+        "latency",
+        "latency-critical-systems",
+        "latency-sensitive",
+        "market",
+        "matter.",
+        "or",
+        "p95",
+        "queues",
+        "realtime",
+        "streaming",
+        "such",
+        "systems",
+        "use",
+        "where"
+      ],
+      "path": "skills/latency-critical-systems/SKILL.md"
+    },
+    {
       "id": "lead-intelligence",
       "name": "lead-intelligence",
       "title": "Lead Intelligence",
@@ -6547,6 +6952,65 @@
         "with"
       ],
       "path": "skills/market-research/SKILL.md"
+    },
+    {
+      "id": "marketing-campaign",
+      "name": "marketing-campaign",
+      "title": "Marketing Campaign",
+      "description": "End-to-end marketing campaign planning and execution. Covers audience research, positioning, campaign angle definition, landing page copy, email sequences, social posts, ad copy, short-form video scripts, and content calendars. Use as the orchestration layer for multi-channel product launches.",
+      "origin": "ECC",
+      "domains": [
+        "research",
+        "orchestration",
+        "content"
+      ],
+      "tool_needs": [
+        "exa",
+        "sequential-thinking"
+      ],
+      "companion_skills": [
+        "search-first",
+        "agentic-engineering"
+      ],
+      "keywords": [
+        "ad",
+        "and",
+        "angle",
+        "as",
+        "audience",
+        "calendars.",
+        "campaign",
+        "content",
+        "copy",
+        "covers",
+        "definition",
+        "ecc",
+        "email",
+        "end-to-end",
+        "execution.",
+        "for",
+        "landing",
+        "launches.",
+        "layer",
+        "marketing",
+        "marketing-campaign",
+        "multi-channel",
+        "orchestration",
+        "page",
+        "planning",
+        "positioning",
+        "posts",
+        "product",
+        "research",
+        "scripts",
+        "sequences",
+        "short-form",
+        "social",
+        "the",
+        "use",
+        "video"
+      ],
+      "path": "skills/marketing-campaign/SKILL.md"
     },
     {
       "id": "mcp-server-patterns",
@@ -7372,6 +7836,57 @@
       "path": "skills/opensource-pipeline/SKILL.md"
     },
     {
+      "id": "parallel-execution-optimizer",
+      "name": "parallel-execution-optimizer",
+      "title": "Parallel Execution Optimizer",
+      "description": "Use when the user wants a task done much faster through parallel work, concurrent agents, batched tool calls, isolated worktrees, or many independent verification lanes without losing correctness.",
+      "origin": "ECC",
+      "domains": [
+        "testing",
+        "orchestration"
+      ],
+      "tool_needs": [],
+      "companion_skills": [
+        "verification-loop",
+        "agentic-engineering",
+        "tdd-workflow"
+      ],
+      "keywords": [
+        "agents",
+        "batched",
+        "calls",
+        "concurrent",
+        "correctness.",
+        "done",
+        "ecc",
+        "execution",
+        "faster",
+        "independent",
+        "isolated",
+        "lanes",
+        "losing",
+        "many",
+        "much",
+        "optimizer",
+        "or",
+        "parallel",
+        "parallel-execution-optimizer",
+        "task",
+        "the",
+        "through",
+        "tool",
+        "use",
+        "user",
+        "verification",
+        "wants",
+        "when",
+        "without",
+        "work",
+        "worktrees"
+      ],
+      "path": "skills/parallel-execution-optimizer/SKILL.md"
+    },
+    {
       "id": "perl-patterns",
       "name": "perl-patterns",
       "title": "Modern Perl Development Patterns",
@@ -7623,6 +8138,120 @@
         "supabase"
       ],
       "path": "skills/postgres-patterns/SKILL.md"
+    },
+    {
+      "id": "prediction-market-oracle-research",
+      "name": "prediction-market-oracle-research",
+      "title": "Prediction Market Oracle Research",
+      "description": "Research prediction markets as data sources or oracle signals for products, agents, dashboards, and corporate decision intelligence. Use for source-grounded analysis of market-implied probabilities, caveats, and integration patterns without investment advice.",
+      "origin": "ECC",
+      "domains": [
+        "research",
+        "orchestration"
+      ],
+      "tool_needs": [
+        "exa"
+      ],
+      "companion_skills": [
+        "search-first",
+        "agentic-engineering"
+      ],
+      "keywords": [
+        "advice.",
+        "agents",
+        "analysis",
+        "and",
+        "as",
+        "caveats",
+        "corporate",
+        "dashboards",
+        "data",
+        "decision",
+        "ecc",
+        "for",
+        "integration",
+        "intelligence.",
+        "investment",
+        "market",
+        "market-implied",
+        "markets",
+        "of",
+        "or",
+        "oracle",
+        "patterns",
+        "prediction",
+        "prediction-market-oracle-research",
+        "probabilities",
+        "products",
+        "research",
+        "signals",
+        "source-grounded",
+        "sources",
+        "use",
+        "without"
+      ],
+      "path": "skills/prediction-market-oracle-research/SKILL.md"
+    },
+    {
+      "id": "prediction-market-risk-review",
+      "name": "prediction-market-risk-review",
+      "title": "Prediction Market Risk Review",
+      "description": "Review prediction-market, basket, oracle, and trading-agent workflows for compliance, safety, data-quality, privacy, and execution risk. Use before any workflow handles venue auth, user portfolio data, API keys, or trade planning.",
+      "origin": "ECC",
+      "domains": [
+        "security",
+        "backend",
+        "research",
+        "orchestration",
+        "business"
+      ],
+      "tool_needs": [
+        "exa",
+        "sequential-thinking"
+      ],
+      "companion_skills": [
+        "security-review",
+        "search-first",
+        "agentic-engineering",
+        "tdd-workflow"
+      ],
+      "keywords": [
+        "and",
+        "any",
+        "api",
+        "auth",
+        "basket",
+        "before",
+        "compliance",
+        "data",
+        "data-quality",
+        "ecc",
+        "execution",
+        "for",
+        "handles",
+        "keys",
+        "market",
+        "or",
+        "oracle",
+        "planning.",
+        "portfolio",
+        "prediction",
+        "prediction-market",
+        "prediction-market-risk-review",
+        "privacy",
+        "review",
+        "risk",
+        "risk.",
+        "safety",
+        "trade",
+        "trading-agent",
+        "use",
+        "user",
+        "venue",
+        "workflow",
+        "workflows"
+      ],
+      "path": "skills/prediction-market-risk-review/SKILL.md"
     },
     {
       "id": "prisma-patterns",
@@ -8451,6 +9080,54 @@
         "social"
       ],
       "path": "skills/recsys-pipeline-architect/SKILL.md"
+    },
+    {
+      "id": "recursive-decision-ledger",
+      "name": "recursive-decision-ledger",
+      "title": "Recursive Decision Ledger",
+      "description": "Use when the user asks for repeated rollouts, marked decision processes, high-dimensional search, stochastic optimization, local-optima exploration, ensemble comparison, or recursive reasoning with a visible evidence trail.",
+      "origin": "ECC",
+      "domains": [
+        "research"
+      ],
+      "tool_needs": [
+        "sequential-thinking"
+      ],
+      "companion_skills": [
+        "search-first"
+      ],
+      "keywords": [
+        "asks",
+        "comparison",
+        "decision",
+        "ecc",
+        "ensemble",
+        "evidence",
+        "exploration",
+        "for",
+        "high-dimensional",
+        "ledger",
+        "local-optima",
+        "marked",
+        "optimization",
+        "or",
+        "processes",
+        "reasoning",
+        "recursive",
+        "recursive-decision-ledger",
+        "repeated",
+        "rollouts",
+        "search",
+        "stochastic",
+        "the",
+        "trail.",
+        "use",
+        "user",
+        "visible",
+        "when",
+        "with"
+      ],
+      "path": "skills/recursive-decision-ledger/SKILL.md"
     },
     {
       "id": "redis-patterns",
@@ -9583,6 +10260,66 @@
         "workflow"
       ],
       "path": "skills/social-graph-ranker/SKILL.md"
+    },
+    {
+      "id": "social-publisher",
+      "name": "social-publisher",
+      "title": "Social Publisher (SocialClaw)",
+      "description": "Agent-driven scheduling and publishing of social media posts across 13 platforms via SocialClaw. Use when the user wants to publish to X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram, YouTube, Reddit, WordPress, or Pinterest — or when managing campaigns, uploading media, or monitoring post delivery status.",
+      "origin": "community",
+      "domains": [
+        "orchestration",
+        "ops",
+        "content",
+        "business"
+      ],
+      "tool_needs": [],
+      "companion_skills": [
+        "agentic-engineering"
+      ],
+      "keywords": [
+        "13",
+        "across",
+        "agent-driven",
+        "and",
+        "campaigns",
+        "community",
+        "delivery",
+        "discord",
+        "facebook",
+        "instagram",
+        "linkedin",
+        "managing",
+        "media",
+        "monitoring",
+        "of",
+        "or",
+        "pages",
+        "pinterest",
+        "platforms",
+        "post",
+        "posts",
+        "publish",
+        "publisher",
+        "publishing",
+        "reddit",
+        "scheduling",
+        "social",
+        "social-publisher",
+        "socialclaw",
+        "socialclaw.",
+        "status.",
+        "telegram",
+        "the",
+        "tiktok",
+        "to",
+        "uploading",
+        "use",
+        "user",
+        "via",
+        "wants"
+      ],
+      "path": "skills/social-publisher/SKILL.md"
     },
     {
       "id": "springboot-patterns",

@@ -54,6 +54,23 @@ function test(name, fn) {
   }
 }
 
+function hasUsableShellRuntime() {
+  const candidates = [];
+  if (process.env.BASH && process.env.BASH.trim()) {
+    candidates.push(process.env.BASH.trim());
+  }
+  candidates.push(process.platform === 'win32' ? 'bash.exe' : 'bash');
+  candidates.push(process.platform === 'win32' ? 'bash' : 'sh');
+
+  return candidates.some(candidate => {
+    const result = spawnSync(candidate, ['-c', ':'], {
+      stdio: 'ignore',
+      windowsHide: true,
+    });
+    return !result.error && result.status === 0;
+  });
+}
+
 function runTests() {
   console.log('\n=== Testing plugin-hook-bootstrap.js ===\n');
 
@@ -159,6 +176,11 @@ process.exit(7);
   })) passed++; else failed++;
 
   if (test('shell mode runs target script through an available shell', () => {
+    if (!hasUsableShellRuntime()) {
+      console.log('    (skipped: shell runtime is unavailable)');
+      return;
+    }
+
     const root = createTempDir();
     try {
       writeFile(root, path.join('scripts', 'hook.sh'), [

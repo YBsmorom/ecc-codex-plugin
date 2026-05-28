@@ -37,3 +37,14 @@ Installer contract for Codex:
 4. 把该目录注册或启用为本地/用户 Codex 插件。
 5. 确认 `ecc-codex-orchestrator` 技能可用。
 6. 给用户一个简短的按任务使用示例。
+
+Update / 更新：
+
+```bash
+npm run codex:update:check
+```
+
+这个命令只做检查：它会比较本地适配版、`YBsmorom/ecc-codex-plugin`
+和 canonical upstream `affaan-m/ECC`。它不会自动拉取代码、不会改
+`~/.codex/plugins/cache`、不会重新信任 hooks。真正更新应由用户明确确认后，
+通过 git pull、Codex marketplace upgrade 或重新安装流程完成。

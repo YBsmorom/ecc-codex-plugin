@@ -12,7 +12,7 @@ This directory contains the **Codex plugin manifest** for this Codex-oriented ad
 
 ## What This Provides
 
-- **233 skills** from `./skills/` — reusable Codex workflows for TDD, security,
+- **247 skills** from `./skills/` — reusable Codex workflows for TDD, security,
   code review, architecture, and more
 - **6 MCP servers** — GitHub, Context7, Exa, Memory, Playwright, Sequential Thinking
 
@@ -56,6 +56,20 @@ repo-marketplace, or manual local installation.
 
 The installed plugin registers under the short slug `ecc` so tool and command names
 stay below provider length limits.
+
+## Update Checks
+
+This adapter supports a read-only update check:
+
+```bash
+npm run codex:update:check
+```
+
+The checker compares the local adapter checkout with `YBsmorom/ecc-codex-plugin`
+and the canonical upstream `affaan-m/ECC`. It does **not** pull code, mutate
+`~/.codex/plugins/cache`, reinstall plugins, or trust updated hooks. Apply
+updates only through an explicit user-approved git pull, Codex marketplace
+upgrade, or reinstall flow, then restart Codex or open a fresh session.
 
 ## MCP Servers Included
 

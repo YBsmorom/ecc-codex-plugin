@@ -6,7 +6,7 @@
 
 [affaan-m/ECC](https://github.com/affaan-m/ECC) is the canonical upstream for ECC. This repository is a Codex-oriented adapter/fork for users who want a repository-URL Codex install path today. It keeps the original ECC content intact and adds the Codex plugin metadata, routing skill, MCP duplicate policy, and installation notes needed for Codex to use ECC as a lazy-loaded plugin.
 
-ECC itself is a harness-native operator system for agentic work: skills, rules, commands, MCP configs, security workflows, TDD workflows, review loops, and verification patterns. This adaptation makes that surface usable from Codex without assuming Claude Code slash commands, hooks, or agent names are available.
+ECC itself is a harness-native operator system for agentic work: skills, rules, commands, MCP configs, security workflows, TDD workflows, review loops, verification patterns, and cross-harness operator conventions. This adaptation makes that surface usable from Codex without assuming Claude Code slash commands, hooks, or agent names are available.
 
 ## ECC For Codex Flow
 
@@ -23,7 +23,8 @@ This is a practical packaging layer for Codex users:
 - a fork that preserves upstream ECC attribution and the MIT license;
 - a Codex plugin surface that can be installed from a repository URL;
 - a router-first way for Codex to select the smallest useful ECC skill/tool surface for each task;
-- a Codex-safe hook adapter that removes unsupported `async` declarations while preserving bounded hook behavior where possible.
+- a Codex-safe hook adapter that removes unsupported `async` declarations while preserving bounded hook behavior where possible;
+- a synced upstream ECC 2.0 preview surface, including the latest skills, agents, commands, MCP catalog entries, and integration fixtures.
 
 Do not present this repository as the canonical ECC package or as an upstream ECC release unless `affaan-m/ECC` merges or links it. Upstream ECC remains the source project. This fork focuses on Codex installation, routing, duplicate-tool policy, and runtime fit; it does not claim true Claude Code background-async hook parity.
 
@@ -122,9 +123,9 @@ ECC only removes files recorded in its install-state. If you installed through t
 
 | Added surface | Why it exists | Compared with upstream ECC |
 | --- | --- | --- |
-| `.codex-plugin/plugin.json` | Lets Codex discover this repository as a plugin. | Upstream ECC is not packaged primarily as this fork's Codex repo-URL adapter. |
+| `.codex-plugin/plugin.json` | Lets Codex discover this repository as a plugin. | Upstream ECC is canonical; this fork keeps the Codex repo-URL install flow explicit. |
 | `skills/ecc-codex-orchestrator/` | Gives Codex one routing entrypoint instead of loading the whole ECC surface. | Upstream skills remain intact; this adds a Codex-facing selector. |
-| `skill-index.json` and `routing-map.json` | Keeps 233 skills searchable through lightweight metadata. | Avoids dumping every skill body into context up front. |
+| `skill-index.json` and `routing-map.json` | Keeps 247 skills searchable through lightweight metadata. | Avoids dumping every skill body into context up front. |
 | `mcp-routing-policy.md` | Handles overlap between ECC MCP servers and Codex-native or official plugins. | Prefers the most native, least duplicative tool for each task. |
 | `hooks/hooks.json` | Provides a Codex-safe hook graph with no `async` declarations. | Preserves the Claude source hook graph separately and adapts former async entries into bounded Codex hook entries. |
 | Bilingual docs | Makes install, boundaries, attribution, and validation clear in English and Chinese. | Adds Codex-specific onboarding without removing upstream documentation. |
@@ -169,6 +170,19 @@ Release and harness references:
 
 MCP management note: Use `/mcp` for Claude Code runtime disables; Claude Code persists those choices in `~/.claude.json`. `ECC_DISABLED_MCPS` is an ECC install/sync filter, not a live Claude Code toggle.
 
+## Upstream Updates Synced In This Adapter
+
+This branch syncs the current upstream preview surface through `affaan-m/ECC@928076cc`:
+
+- the `marketing-agent` and `marketing-campaign` command;
+- the opt-in AURA trust adapter under `integrations/aura/`;
+- Squish Memory in the MCP catalog;
+- frontend accessibility, social publisher, benchmark/data throughput, ITO, prediction-market, parallel-execution, recursive-decision, and latency-critical skills;
+- German docs plus updated localized README counts;
+- the hook cost tracker fix that prefers a fresh harness cost cache when present.
+
+Codex-specific files remain fork-scoped and are not described as canonical ECC releases.
+
 ## How Codex Uses ECC
 
 Codex should not load the whole ECC surface at once. The router follows progressive disclosure:
@@ -209,28 +223,28 @@ The repository should also be scanned for real credentials before public push. T
 
 ## Upstream Catalog Snapshot
 
-This Codex adaptation keeps the upstream ECC catalog available. After installation, Codex can route access to 60 agents, 233 skills, and 75 legacy command shims through the Codex-facing router and reference material.
+This Codex adaptation keeps the upstream ECC catalog available. After installation, Codex can route access to 61 agents, 247 skills, and 76 legacy command shims through the Codex-facing router and reference material.
 
-The rc.1 public surface is preserved and extended for Codex: actual OSS surface: 60 agents, 233 skills, and 75 legacy command shims.
+The rc.1 public surface is preserved and extended for Codex: actual OSS surface: 61 agents, 247 skills, and 76 legacy command shims.
 
 Project tree snapshot:
 
 ```text
-| -- agents/ # 60 specialized subagents for delegation
+| -- agents/ # 61 specialized subagents for delegation
 ```
 
 Catalog comparison:
 
 | Surface | Count |
 | --- | --- |
-| Agents | 60 agents |
-| Commands | 75 commands |
-| Skills | 233 skills |
+| Agents | 61 agents |
+| Commands | 76 commands |
+| Skills | 247 skills |
 
 Harness parity:
 
 | Surface | Total | Claude Code | Codex | Other |
 | --- | ---: | --- | --- | ---: |
-| Agents | 60 | Shared (AGENTS.md) | Shared (AGENTS.md) | 12 |
-| Commands | 75 | Shared | Instruction-based | 75 |
-| Skills | 233 | Shared | Routed through ecc-codex-orchestrator | 37 |
+| Agents | 61 | Shared (AGENTS.md) | Shared (AGENTS.md) | 12 |
+| Commands | 76 | Shared | Instruction-based | 76 |
+| Skills | 247 | Shared | Routed through ecc-codex-orchestrator | 37 |

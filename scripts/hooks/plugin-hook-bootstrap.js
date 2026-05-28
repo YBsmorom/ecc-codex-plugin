@@ -60,7 +60,7 @@ function findShellBinary() {
       stdio: 'ignore',
       windowsHide: true,
     });
-    if (!probe.error) {
+    if (!probe.error && probe.status === 0) {
       return candidate;
     }
   }

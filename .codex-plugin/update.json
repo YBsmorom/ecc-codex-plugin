@@ -1,0 +1,13 @@
+{
+  "official": false,
+  "adapterRepo": "https://github.com/YBsmorom/ecc-codex-plugin.git",
+  "adapterRef": "main",
+  "canonicalUpstream": "https://github.com/affaan-m/ECC.git",
+  "upstreamRef": "main",
+  "strategy": "check-only",
+  "notes": [
+    "This repository is a Codex-oriented adapter/fork. affaan-m/ECC remains the canonical upstream.",
+    "Update checks must not mutate Codex plugin cache directories or silently trust new hooks.",
+    "Apply updates only through an explicit user-approved reinstall, marketplace upgrade, or git pull workflow."
+  ]
+}
